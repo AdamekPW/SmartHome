@@ -84,6 +84,8 @@ def handle_connect():
     print('Klient połączony')
     send('Witaj, jesteś połączony z serwerem!')
 
+
+
 # Losowanie próbki w osobnym wątku a następnie wysyłanie jej na frontend
 def temperature_sensor():
     with app.app_context():
@@ -110,4 +112,4 @@ if __name__ == '__main__':
     sensor_thread.daemon = True
     sensor_thread.start()
 
-    socketio.run(app, host='127.0.0.1', port=8000)
+    socketio.run(app, host='0.0.0.0', port=8000)
