@@ -105,6 +105,7 @@ def temperature_sensor():
 
             time.sleep(10)  # Czas próbkowania co 10 sekund
 
+app.debug = True
 
 if __name__ == '__main__':
     # Uruchomienie funkcji temperature_sensor w osobnym wątku
@@ -112,4 +113,4 @@ if __name__ == '__main__':
     sensor_thread.daemon = True
     sensor_thread.start()
 
-    socketio.run(app, host='0.0.0.0', port=8000)
+    socketio.run(app, host='127.0.0.1', port=8000)
