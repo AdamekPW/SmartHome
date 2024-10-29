@@ -96,8 +96,8 @@ def temperature_sensor():
             print("dzialam")
             # Zapisanie odczytu do bazy danych
             
-            db.session.add(new_sample)
-            db.session.commit()
+            # db.session.add(new_sample)
+            # db.session.commit()
 
             # Wysłanie danych przez socket do klienta
             socketio.emit('temperature_update', {'temp': simulated_temp})
