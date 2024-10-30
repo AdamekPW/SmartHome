@@ -22,19 +22,10 @@
                 <td>{{ temp.date_created }}</td>
                 <td>
                     <a href="/delete/{{temp.id}}">Delete</a>
-                    <br>
-                    <a href="/update/{{temp.id}}">Update</a>
                 </td>
             </tr>
         {% endfor %}
     </table>
     {% endif %}
-
-    <div class="form">
-        <form action="/" method="POST">
-            <input type="text" name="content" id="content">
-            <input type="submit" value="Add temperature sample">
-        </form>
-    </div>
 </div>
 {% endblock %}

@@ -6,6 +6,8 @@ from flask_socketio import SocketIO, send
 import threading
 import time
 import random 
+import signal
+import sys
 
 # Konfiguracja aplikacji
 app = Flask(__name__)
@@ -31,22 +33,8 @@ class TempSample(db.Model):
 # Dodanie próbki temperatury do bazy danych oraz jej wyświetlenie na stronie backendu
 @app.route('/', methods=['POST', 'GET'])
 def index():
-    if request.method == 'POST':
-        temp_content = request.form['temp']
-        new_temp = TempSample(temp=temp_content)
-
-        try:
-            db.session.add(new_temp)
-            db.session.commit()
-
-            socketio.emit('temperature_update', {'temp': new_temp})
-
-            return redirect('/')
-        except:
-            return 'There was an issue adding your temperature sample'
-    else:
-        temps = TempSample.query.order_by(TempSample.date_created).all()
-        return render_template('index.html', temps = temps)
+    temps = TempSample.query.order_by(TempSample.date_created).all()
+    return render_template('index.html', temps = temps)
 
 # Usuwanie próbki temperatury z bazy danych
 @app.route('/delete/<int:id>')
@@ -60,22 +48,6 @@ def delete(id):
     except:
         return 'There was a problem deleting that temperature sample'
 
-# Aktualizacja próbki temperatury w bazie danych
-@app.route('/update/<int:id>', methods=['GET', 'POST'])
-def update(id):
-    temp = TempSample.query.get_or_404(id)
-
-    if request.method == 'POST':
-        temp.temp = request.form['temp']
-
-        try:
-            db.session.commit()
-            return redirect('/')
-        except:
-            return 'There was an issue updating your temperature sample'
-
-    else:
-        return render_template('update.html', temp=temp)
     
 
 # Wydarzenie, gdy klient połączy się z serwerem
@@ -93,9 +65,8 @@ def temperature_sensor():
             simulated_temp = round(random.uniform(20.0, 25.0), 2)  # Symulowana temperatura
             new_sample = TempSample(temp=simulated_temp)
 
-            print("dzialam")
+           
             # Zapisanie odczytu do bazy danych
-            
             # db.session.add(new_sample)
             # db.session.commit()
 
@@ -105,7 +76,19 @@ def temperature_sensor():
 
             time.sleep(10)  # Czas próbkowania co 10 sekund
 
-app.debug = True
+#app.debug = True
+
+# Flaga kontrolująca działanie wątku
+stop_thread = False
+
+# Funkcja obsługująca zamknięcie aplikacji
+def stop_threads(*args):
+    global stop_thread
+    stop_thread = True
+    print("Zamykanie aplikacji i wątku...")
+    sys.exit(0)
+
+signal.signal(signal.SIGINT, stop_threads)  # Obsługa Ctrl+C
 
 if __name__ == '__main__':
     # Uruchomienie funkcji temperature_sensor w osobnym wątku
