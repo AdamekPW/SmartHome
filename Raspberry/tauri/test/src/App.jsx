@@ -5,7 +5,7 @@ import "./App.css";
 import io from 'socket.io-client';
 
 // Połączenie z serwerem WebSocket (Flask-SocketIO)
-const socket = io('http://localhost:8000'); 
+const socket = io('http://localhost:7000'); 
 
 function App() {
   const [greetMsg, setGreetMsg] = useState("");

@@ -9,6 +9,9 @@ import random
 import signal
 import sys
 
+import asyncio
+import websockets
+
 # Konfiguracja aplikacji
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///test.db'
@@ -48,7 +51,6 @@ def delete(id):
     except:
         return 'There was a problem deleting that temperature sample'
 
-    
 
 # Wydarzenie, gdy klient połączy się z serwerem
 @socketio.on('connect')
@@ -56,27 +58,6 @@ def handle_connect():
     print('Klient połączony')
     send('Witaj, jesteś połączony z serwerem!')
 
-
-
-# Losowanie próbki w osobnym wątku a następnie wysyłanie jej na frontend
-def temperature_sensor():
-    with app.app_context():
-        while True:
-            simulated_temp = round(random.uniform(20.0, 25.0), 2)  # Symulowana temperatura
-            new_sample = TempSample(temp=simulated_temp)
-
-           
-            # Zapisanie odczytu do bazy danych
-            # db.session.add(new_sample)
-            # db.session.commit()
-
-            # Wysłanie danych przez socket do klienta
-            socketio.emit('temperature_update', {'temp': simulated_temp})
-            print(f'Nowa próbka temperatury: {simulated_temp}°C')
-
-            time.sleep(10)  # Czas próbkowania co 10 sekund
-
-#app.debug = True
 
 # Flaga kontrolująca działanie wątku
 stop_thread = False
@@ -90,10 +71,41 @@ def stop_threads(*args):
 
 signal.signal(signal.SIGINT, stop_threads)  # Obsługa Ctrl+C
 
-if __name__ == '__main__':
-    # Uruchomienie funkcji temperature_sensor w osobnym wątku
-    sensor_thread = threading.Thread(target=temperature_sensor)
-    sensor_thread.daemon = True
-    sensor_thread.start()
+async def handle_connection(websocket):
+    print("Client connected")
+    try:
+        async for message in websocket:
+            print(f"Received message: {message}")
+            # Zapisanie odczytu do bazy danych
+            new_sample = TempSample(temp=float(message))
+            with app.app_context():
+                db.session.add(new_sample)
+                db.session.commit()
+                socketio.emit('temperature_update', {'temp': float(message)})
+                print(f'Przesłano na frontend: {float(message)}°C')
+                
+            await websocket.send(f"Echo: {message}")  # Odesłanie wiadomości
+    except websockets.ConnectionClosed:
+        print("Client disconnected")
 
-    socketio.run(app, host='127.0.0.1', port=8000)
+
+def run_websocket_server():
+    asyncio.set_event_loop(asyncio.new_event_loop())  # Create a new event loop for this thread
+    loop = asyncio.get_event_loop()
+    start_server = websockets.serve(handle_connection, "0.0.0.0", 8000)
+
+    loop.run_until_complete(start_server)
+    print("WebSocket server started on ws://0.0.0.0:8000")
+    loop.run_forever()
+
+
+if __name__ == '__main__':
+    # Uruchomienie serwera WebSocket w osobnym wątku
+    websocket_thread = threading.Thread(target=run_websocket_server)
+    websocket_thread.daemon = True
+    websocket_thread.start()
+
+    socketio.run(app, host='127.0.0.1', port=7000)
+
+
+
