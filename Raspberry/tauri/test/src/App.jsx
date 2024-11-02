@@ -3,6 +3,7 @@ import reactLogo from "./assets/react.svg";
 import { invoke } from "@tauri-apps/api/core";
 import "./App.css";
 import io from 'socket.io-client';
+import Button from './Button';
 
 // Połączenie z serwerem WebSocket (Flask-SocketIO)
 const socket = io('http://localhost:7000');
@@ -54,7 +55,6 @@ function App() {
       <p>Click on the Tauri, Vite, and React logos to learn more.</p>
 
       {/* Wyświetlanie wiadomości od serwera */}
-      <p>Wiadomość od serwera: {msg}</p>
 
       <form
         className="row"
