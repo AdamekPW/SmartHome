@@ -3,7 +3,7 @@ import reactLogo from "./assets/react.svg";
 import { invoke } from "@tauri-apps/api/core";
 import "./App.css";
 import io from 'socket.io-client';
-import Button from './Button';
+import Button from './button';
 
 // Połączenie z serwerem WebSocket (Flask-SocketIO)
 const socket = io('http://localhost:7000');
@@ -72,7 +72,7 @@ function App() {
       </form>
       <p>{greetMsg}</p>
       <Button />
-      <p>Temperatura: {temp} °C</p>
+      <p>Temperatura: {temp.temp} °C</p>
     </main>
   );
 }

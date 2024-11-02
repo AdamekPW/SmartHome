@@ -7,17 +7,6 @@ const socket = io('http://localhost:7000'); // Zmień na adres swojego serwera
 const ToggleButton = () => {
     const [isOn, setIsOn] = useState(false);
 
-    // Ustawienie połączenia socket przy montowaniu komponentu
-    useEffect(() => {
-        socket.on('connect', () => {
-            console.log('Połączono z serwerem Socket.IO');
-        });
-
-        // Zamknij połączenie przy odmontowywaniu komponentu
-        return () => {
-            socket.disconnect();
-        };
-    }, []);
 
     // Funkcja obsługująca kliknięcie przycisku
     const handleToggle = () => {
@@ -26,6 +15,7 @@ const ToggleButton = () => {
 
         // Wysłanie aktualnego stanu do serwera przez socket
         socket.emit('toggleState', newState ? 'ON' : 'OFF');
+        console.log('Wysłano stan:', newState ? 'ON' : 'OFF');
     };
 
     return (
