@@ -91,20 +91,20 @@ async def send_to_websocket_server(state):
 
 async def handle_connection(websocket):
 
-    print("Client connected")
+    print("Raspberry connected")
     try:
-        async for message in websocket:
-            print(f"Received message: {message}")
+        async for sample in websocket:
+            print(f"Received temperature sample: {sample}")
             # Zapisanie odczytu do bazy danych
-            new_sample = TempSample(temp=float(message))
+            new_sample = TempSample(temp=float(sample))
             with app.app_context():
                 # db.session.add(new_sample)
                 # db.session.commit()
-                socketio.emit("temperature_update", {"temp": message})
-                print(f"Przesłano na frontend: {message}°C")
+                socketio.emit("temperature_update", {"temp": sample})
+                print(f"Przesłano na frontend: {sample}°C")
 
     except websockets.ConnectionClosed:
-        print("Client disconnected")
+        print("Raspberry disconnected")
 
 
 def run_websocket_server():
