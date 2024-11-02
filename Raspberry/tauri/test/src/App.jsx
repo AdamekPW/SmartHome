@@ -3,7 +3,7 @@ import reactLogo from "./assets/react.svg";
 import { invoke } from "@tauri-apps/api/core";
 import "./App.css";
 import io from 'socket.io-client';
-
+import Button from './Button';
 // Połączenie z serwerem WebSocket (Flask-SocketIO)
 const socket = io('http://localhost:8000'); 
 
@@ -11,7 +11,7 @@ function App() {
   const [greetMsg, setGreetMsg] = useState("");
   const [msg, setMsg] = useState("");
   const [name, setName] = useState("");
-
+  
   useEffect(() => {
     // Połączenie WebSocket
     socket.on('connect', () => {
@@ -70,6 +70,7 @@ function App() {
         <button type="submit">Greet</button>
       </form>
       <p>{greetMsg}</p>
+    <Button />
     </main>
   );
 }

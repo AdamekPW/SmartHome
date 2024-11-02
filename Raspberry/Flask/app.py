@@ -103,6 +103,9 @@ def temperature_sensor():
 
             time.sleep(10)  # Czas próbkowania co 10 sekund
 
+@socketio.on('toggleState')
+def handle_toggle_state(state):
+    print(f'Stan przycisku: {state}')
 
 if __name__ == '__main__':
     # Uruchomienie funkcji temperature_sensor w osobnym wątku
