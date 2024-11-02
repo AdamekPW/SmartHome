@@ -5,15 +5,15 @@ import "./App.css";
 import io from 'socket.io-client';
 
 // Połączenie z serwerem WebSocket (Flask-SocketIO)
-const socket = io('http://localhost:7000'); 
+const socket = io('http://localhost:7000');
 
 function App() {
   const [greetMsg, setGreetMsg] = useState("");
-  const [msg, setMsg] = useState("");
+  const [temp, setTemp] = useState("");
   const [name, setName] = useState("");
 
   useEffect(() => {
-    // Połączenie WebSocket
+    // Połączenie WebSocketz
     socket.on('connect', () => {
       console.log('WebSocket połączony');
     });
@@ -21,6 +21,7 @@ function App() {
     // Odbieranie wiadomości od serwera
     socket.on('temperature_update', (data) => {
       console.log('Otrzymano probke temperatury:', data);
+      setTemp(data);
     });
 
     // Czyszczenie socketu po odłączeniu komponentu
@@ -70,6 +71,8 @@ function App() {
         <button type="submit">Greet</button>
       </form>
       <p>{greetMsg}</p>
+      <Button />
+      <p>Temperatura: {temp} °C</p>
     </main>
   );
 }

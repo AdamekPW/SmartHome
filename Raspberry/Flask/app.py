@@ -5,7 +5,7 @@ from flask_socketio import SocketIO, send
 
 import threading
 import time
-import random 
+import random
 import signal
 import sys
 
@@ -14,9 +14,10 @@ import websockets
 
 # Konfiguracja aplikacji
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///test.db'
+app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///test.db"
 db = SQLAlchemy(app)
 socketio = SocketIO(app, cors_allowed_origins="*", async_mode="gevent")
+
 
 # Klasa reprezentująca tabelę w bazie danych
 class TempSample(db.Model):
@@ -25,42 +26,50 @@ class TempSample(db.Model):
     date_created = db.Column(db.DateTime, default=datetime.utcnow)
 
     def __repr__(self):
-        return '<TempSample %r>' % self.id
-    
+        return "<TempSample %r>" % self.id
+
 
 # Tworzenie bazy danych (odkomentuj za pierwszym razem jesli bazy nie ma w repozytorium)
 
 # with app.app_context():
 #     db.create_all()
 
+
 # Dodanie próbki temperatury do bazy danych oraz jej wyświetlenie na stronie backendu
-@app.route('/', methods=['POST', 'GET'])
+@app.route("/", methods=["POST", "GET"])
 def index():
     temps = TempSample.query.order_by(TempSample.date_created).all()
-    return render_template('index.html', temps = temps)
+    return render_template("index.html", temps=temps)
+
 
 # Usuwanie próbki temperatury z bazy danych
-@app.route('/delete/<int:id>')
+@app.route("/delete/<int:id>")
 def delete(id):
     temp_to_delete = TempSample.query.get_or_404(id)
 
     try:
         db.session.delete(temp_to_delete)
         db.session.commit()
-        return redirect('/')
+        return redirect("/")
     except:
-        return 'There was a problem deleting that temperature sample'
+        return "There was a problem deleting that temperature sample"
 
 
 # Wydarzenie, gdy klient połączy się z serwerem
-@socketio.on('connect')
+@socketio.on("connect")
 def handle_connect():
-    print('Klient połączony')
-    send('Witaj, jesteś połączony z serwerem!')
+    print("Klient połączony")
+    send("Witaj, jesteś połączony z serwerem!")
+
+
+@socketio.on("toggleState")
+def handle_toggle_state(state):
+    print(f"Stan przycisku: {state}")
 
 
 # Flaga kontrolująca działanie wątku
 stop_thread = False
+
 
 # Funkcja obsługująca zamknięcie aplikacji
 def stop_threads(*args):
@@ -69,7 +78,9 @@ def stop_threads(*args):
     print("Zamykanie aplikacji i wątku...")
     sys.exit(0)
 
+
 signal.signal(signal.SIGINT, stop_threads)  # Obsługa Ctrl+C
+
 
 async def handle_connection(websocket):
     print("Client connected")
@@ -81,16 +92,18 @@ async def handle_connection(websocket):
             with app.app_context():
                 db.session.add(new_sample)
                 db.session.commit()
-                socketio.emit('temperature_update', {'temp': float(message)})
-                print(f'Przesłano na frontend: {float(message)}°C')
-                
+                socketio.emit("temperature_update", {"temp": float(message)})
+                print(f"Przesłano na frontend: {float(message)}°C")
+
             await websocket.send(f"Echo: {message}")  # Odesłanie wiadomości
     except websockets.ConnectionClosed:
         print("Client disconnected")
 
 
 def run_websocket_server():
-    asyncio.set_event_loop(asyncio.new_event_loop())  # Create a new event loop for this thread
+    asyncio.set_event_loop(
+        asyncio.new_event_loop()
+    )  # Create a new event loop for this thread
     loop = asyncio.get_event_loop()
     start_server = websockets.serve(handle_connection, "0.0.0.0", 8000)
 
@@ -99,13 +112,10 @@ def run_websocket_server():
     loop.run_forever()
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     # Uruchomienie serwera WebSocket w osobnym wątku
     websocket_thread = threading.Thread(target=run_websocket_server)
     websocket_thread.daemon = True
     websocket_thread.start()
 
-    socketio.run(app, host='127.0.0.1', port=7000)
-
-
-
+    socketio.run(app, host="127.0.0.1", port=7000)
