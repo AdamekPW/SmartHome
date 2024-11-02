@@ -1,24 +1,39 @@
 import asyncio
 import websockets
 import random
-import time
 
-
-async def send_message(uri, message):
-    async with websockets.connect(uri) as websocket:
-        await websocket.send(message)
-        print(f"Sent message: {message}")
-
-# Example usage
+# WebSocket server URI
 uri = "ws://localhost:8000"
-message = "Hello, WebSocket!"
-async def send_temperature(uri):
+
+
+# Function to send temperature data
+async def send_temperature(websocket):
     while True:
         temperature = random.uniform(20.0, 25.0)  # Simulate temperature reading
         message = f"{temperature:.2f}"
-        await send_message(uri, message)
+        await websocket.send(message)
+        print(f"Sent temperature: {message}°C")
         await asyncio.sleep(3)
 
-# Example usage
-asyncio.get_event_loop().run_until_complete(send_temperature(uri))
-asyncio.get_event_loop().run_until_complete(send_message(uri, message))
+
+# Function to receive messages (like button state)
+async def receive_button_status(websocket):
+    async for message in websocket:
+        print(f"Received message: {message}")
+
+
+# Main function to connect to the WebSocket server and handle both sending and receiving
+async def main():
+    async with websockets.connect(uri) as websocket:
+        # Run both sending and receiving in parallel
+        await asyncio.gather(
+            send_temperature(websocket),  # Task to send temperature data
+            receive_button_status(
+                websocket
+            ),  # Task to receive messages (e.g., button state)
+        )
+
+
+# Run the main function
+if __name__ == "__main__":
+    asyncio.run(main())

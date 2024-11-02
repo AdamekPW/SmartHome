@@ -4,8 +4,6 @@ from datetime import datetime
 from flask_socketio import SocketIO, send
 
 import threading
-import time
-import random
 import signal
 import sys
 
@@ -55,18 +53,6 @@ def delete(id):
         return "There was a problem deleting that temperature sample"
 
 
-# Wydarzenie, gdy klient połączy się z serwerem
-@socketio.on("connect")
-def handle_connect():
-    print("Klient połączony")
-    send("Witaj, jesteś połączony z serwerem!")
-
-
-@socketio.on("toggleState")
-def handle_toggle_state(state):
-    print(f"Stan przycisku: {state}")
-
-
 # Flaga kontrolująca działanie wątku
 stop_thread = False
 
@@ -82,7 +68,29 @@ def stop_threads(*args):
 signal.signal(signal.SIGINT, stop_threads)  # Obsługa Ctrl+C
 
 
+# Wydarzenie, gdy klient połączy się z serwerem
+@socketio.on("connect")
+def handle_connect():
+    print("Frontend połączony")
+    send("Witaj, jesteś połączony z serwerem Flask!")
+
+
+@socketio.on("toggleState")
+def handle_toggle_state(state):
+    print(f"Stan przycisku: {state}")
+    asyncio.run(send_to_websocket_server(state))
+
+
+# Funkcja wysyłająca stan przycisku do serwera WebSocket na porcie 8000
+async def send_to_websocket_server(state):
+    uri = "ws://localhost:8000"  # Port 8000
+    async with websockets.connect(uri) as websocket:
+        await websocket.send(f"Button State: {state}")
+        print(f"Wysłano stan przycisku: {state} do serwera WebSocket")
+
+
 async def handle_connection(websocket):
+
     print("Client connected")
     try:
         async for message in websocket:
@@ -90,12 +98,11 @@ async def handle_connection(websocket):
             # Zapisanie odczytu do bazy danych
             new_sample = TempSample(temp=float(message))
             with app.app_context():
-                db.session.add(new_sample)
-                db.session.commit()
-                socketio.emit("temperature_update", {"temp": float(message)})
-                print(f"Przesłano na frontend: {float(message)}°C")
+                # db.session.add(new_sample)
+                # db.session.commit()
+                socketio.emit("temperature_update", {"temp": message})
+                print(f"Przesłano na frontend: {message}°C")
 
-            await websocket.send(f"Echo: {message}")  # Odesłanie wiadomości
     except websockets.ConnectionClosed:
         print("Client disconnected")
 
