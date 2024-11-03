@@ -2,34 +2,38 @@ import asyncio
 import websockets
 import random
 
-uri = "ws://localhost:8000"
-
-
 async def send_temperature(websocket):
-    while True:
-        temperature = random.uniform(20.0, 25.0)
-        message = f"{temperature:.2f}"
-        await websocket.send(message)
-        print(f"Sent temperature: {message}°C")
-        await asyncio.sleep(3)
-
+    try:
+        while True:
+            temperature = random.uniform(20.0, 25.0)
+            temp_sample = f"{temperature:.2f}"
+            await websocket.send(temp_sample)
+            print(f"Sent temperature: {temp_sample}°C")
+            await asyncio.sleep(3)
+    except websockets.ConnectionClosedOK:
+        print("Connection closed gracefully in send_temperature.")
 
 async def receive_button_status(websocket):
-    async for message in websocket:
-        print(f"Received message: {message}")
+    try:
+        while True:
+            button_status = await websocket.recv()  # Await receiving the next message
+            print(f"Received button status: {button_status}")
+    except websockets.ConnectionClosedOK:
+        print("Connection closed gracefully in receive_button_status.")
 
+async def handler(websocket):
+    try:
+        await asyncio.gather(
+            send_temperature(websocket),
+            receive_button_status(websocket),
+        )
+    except websockets.ConnectionClosedOK:
+        print("Connection closed gracefully in handler.")
 
 async def main():
-    while True:
-        try:
-            async with websockets.connect(uri) as websocket:
-                await asyncio.gather(
-                    send_temperature(websocket), receive_button_status(websocket)
-                )
-        except websockets.exceptions.ConnectionClosedOK:
-            print("Connection closed, reconnecting...")
-            await asyncio.sleep(1)
-
+    server = await websockets.serve(handler, "localhost", 8000)
+    print("Server started on ws://localhost:8000")
+    await server.wait_closed()
 
 if __name__ == "__main__":
     asyncio.run(main())
