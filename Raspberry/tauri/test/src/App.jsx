@@ -14,11 +14,6 @@ function App() {
   const [name, setName] = useState("");
 
   useEffect(() => {
-    // Połączenie WebSocketz
-    socket.on('connect', () => {
-      console.log('WebSocket połączony');
-    });
-
     // Odbieranie wiadomości od serwera
     socket.on('temperature_update', (data) => {
       console.log('Otrzymano probke temperatury:', data);
@@ -27,7 +22,6 @@ function App() {
 
     // Czyszczenie socketu po odłączeniu komponentu
     return () => {
-      socket.off('connect');
       socket.off('temperature_update');
     };
   }, []);
