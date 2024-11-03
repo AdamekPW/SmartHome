@@ -11,7 +11,8 @@ async def send_temperature(websocket):
             print(f"Sent temperature: {temp_sample}°C")
             await asyncio.sleep(3)
     except websockets.ConnectionClosedOK:
-        print("Connection closed gracefully in send_temperature.")
+        pass
+        #print("Connection closed gracefully in send_temperature.")
 
 async def receive_button_status(websocket):
     try:
@@ -19,16 +20,14 @@ async def receive_button_status(websocket):
             button_status = await websocket.recv()  # Await receiving the next message
             print(f"Received button status: {button_status}")
     except websockets.ConnectionClosedOK:
-        print("Connection closed gracefully in receive_button_status.")
+        print("Client connection close after receiving button status.")
 
 async def handler(websocket):
-    try:
-        await asyncio.gather(
-            send_temperature(websocket),
-            receive_button_status(websocket),
-        )
-    except websockets.ConnectionClosedOK:
-        print("Connection closed gracefully in handler.")
+    await asyncio.gather(
+        send_temperature(websocket),
+        receive_button_status(websocket),
+    )
+
 
 async def main():
     server = await websockets.serve(handler, "localhost", 8000)

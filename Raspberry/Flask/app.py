@@ -5,9 +5,6 @@ from flask_socketio import SocketIO, send
 
 import threading
 
-import asyncio
-import websockets
-
 app = Flask(__name__)
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///test.db"
 db = SQLAlchemy(app)
@@ -39,22 +36,11 @@ def delete(id):
     except:
         return "There was a problem deleting that temperature sample"
 
-@socketio.on("toggleState")
-def handle_toggle_state(state):
-    print(f"Button state received from frontend: {state}")
-    # Forward the button state to the WebSocket server
-    asyncio.run(forward_button_state(state))
-
-async def forward_button_state(state):
-    uri = "ws://localhost:8000"
-    try:
-        async with websockets.connect(uri) as websocket:
-            await websocket.send(f"Button State: {state}")
-            print(f"Sent button state '{state}' to WebSocket server on port 8000")
-    except Exception as e:
-        print(f"Error forwarding button state: {e}")
 
 def handle_connection():
+    import asyncio
+    import websockets
+
     async def websocket_client():
         uri = "ws://localhost:8000"
         async with websockets.connect(uri) as websocket:
@@ -66,6 +52,21 @@ def handle_connection():
                     # db.session.commit()
                     socketio.emit("temperature_update", {"temp": message})
                     print(f"Received from server and sent to frontend: {message}°C")
+
+    @socketio.on("toggleState")
+    def handle_toggle_state(state):
+        print(f"Button state received from frontend: {state}")
+        # Forward the button state to the WebSocket server
+        asyncio.run(forward_button_state(state))
+
+    async def forward_button_state(state):
+        uri = "ws://localhost:8000"
+        try:
+            async with websockets.connect(uri) as websocket:
+                await websocket.send(f"Button State: {state}")
+                print(f"Sent button state '{state}' to WebSocket server on port 8000")
+        except Exception as e:
+            print(f"Error forwarding button state: {e}")
 
     asyncio.run(websocket_client())
 
