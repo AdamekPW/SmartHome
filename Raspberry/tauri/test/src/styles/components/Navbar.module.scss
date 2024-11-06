@@ -1,0 +1,50 @@
+@use "../vars" as *;
+
+.container {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    width: 8.125em;
+    height: 100vh;
+    padding: 1em 0;
+    background-color: $navbar-background;
+    box-sizing: border-box;
+    box-shadow: 2px 0px 2px black;
+}
+
+.modulesTitle {
+    font-size: 1.5em;
+    margin-top: 0.5em;
+}
+
+.logoButton, .moduleButton {
+    width: 6.75em;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: $light-grey;
+    border-radius: 0.5em;
+    cursor: pointer;
+    transition: 0.25s;
+
+    &:hover {
+        background-color: $medium-light-grey;
+    }
+}
+
+.logoButton {
+    height: 6.75em;
+    border: none;
+    border-radius: 0.5em;
+    margin-bottom: 1em;
+}
+
+.moduleButton {
+    height: 6em;
+    border: 2px solid transparent;
+
+    svg {
+        font-size: 2.75em;
+    }
+}
