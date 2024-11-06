@@ -1,0 +1,20 @@
+@use "vars" as *;
+
+* {
+    margin: 0;
+    padding: 0;
+    font-family: "Lato", sans-serif;
+}
+
+main {
+    background-color: $background;
+    color: $text;
+    display: flex;
+    flex-direction: row;
+}
+
+@media (max-width: 32rem) {
+    main {
+        flex-direction: column-reverse;
+    }
+}
