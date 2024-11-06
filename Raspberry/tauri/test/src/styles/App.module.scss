@@ -12,3 +12,9 @@ main {
     display: flex;
     flex-direction: row;
 }
+
+@media (max-width: 32rem) {
+    main {
+        flex-direction: column-reverse;
+    }
+}

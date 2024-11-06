@@ -3,7 +3,6 @@ import styles from "../styles/components/Navbar.module.scss";
 
 import { FaFan } from "react-icons/fa";
 import { RiOutletLine } from "react-icons/ri";
-import { TbCircuitDiode } from "react-icons/tb";
 
 const Navbar = ({ selectedModule, onModuleSelect }) => {
     return (
@@ -39,7 +38,7 @@ const Navbar = ({ selectedModule, onModuleSelect }) => {
                 }`}
                 onClick={() => onModuleSelect("ledstrip")}
             >
-                <TbCircuitDiode />
+                <img src="led-strip.png" className={styles.icon}></img>
             </button>
         </div>
     );

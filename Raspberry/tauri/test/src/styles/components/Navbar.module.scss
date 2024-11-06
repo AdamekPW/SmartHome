@@ -51,4 +51,30 @@
     svg {
         font-size: 2.75em;
     }
+
+    .icon {
+        width: 2.75em;
+    }
+}
+
+@media (max-width: 32rem) {
+    .container {
+        position: fixed;
+        bottom: 0;
+        right: 0;
+        height: 4em;
+        width: 100vw;
+        flex-direction: row;
+        padding: 0 0.75em;
+    }
+
+    .modulesTitle {
+        display: none;
+    }
+
+    .logoButton, .moduleButton {
+        width: 4em;
+        height: 4em;
+        margin-bottom: 0;
+    }
 }
