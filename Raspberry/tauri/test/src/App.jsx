@@ -7,7 +7,7 @@ import Navbar from "./components/Navbar";
 import Home from "./components/Home";
 import FanComponent from "./components/FanComponent";
 import PlugStripComponent from "./components/PlugStripComponent";
-import LedStripComponent from "./components/LedStripComponent";
+import LedStripComponent from "./components/LedStripComponent/LedStripComponent";
 
 // Połączenie z serwerem WebSocket (Flask-SocketIO)
 // const socket = io("http://localhost:7000");
