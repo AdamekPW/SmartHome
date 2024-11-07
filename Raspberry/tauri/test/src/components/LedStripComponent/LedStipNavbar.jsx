@@ -6,9 +6,11 @@ const LedStripNavbar = () => {
     const displayLedOptions = () => {
         return ledOptions.map((option) => {
             return (
-                <div>
+                <div className={styles.optionWithLine}>
                     <hr className={styles.line}></hr>
-                    <p className={styles.ledOption}>{option.name}</p>
+                    <div className={styles.ledOptionElement}>
+                        <p className={styles.ledOption}>{option.name}</p>
+                    </div>
                 </div>
             );
         });
