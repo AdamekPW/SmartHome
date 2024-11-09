@@ -1,19 +1,19 @@
-import React, { useState, useEffect } from "react";
-import io from "socket.io-client";
+// Button.jsx
 
-// Konfiguracja adresu serwera Socket.IO
-const socket = io("http://localhost:7000"); // Zmień na adres swojego serwera
+import React, { useState } from "react";
 
-const ToggleButton = () => {
+const ToggleButton = ({ onClick }) => {
     const [isOn, setIsOn] = useState(false);
 
-    // Funkcja obsługująca kliknięcie przycisku
     const handleToggle = () => {
         const newState = !isOn;
         setIsOn(newState);
 
-        // Wysłanie aktualnego stanu do serwera przez socket
-        socket.emit("toggleState", newState ? "ON" : "OFF");
+
+        if (onClick) {
+            onClick(newState); 
+        }
+
         console.log("Wysłano stan:", newState ? "ON" : "OFF");
     };
 
@@ -25,7 +25,7 @@ const ToggleButton = () => {
                 height: "10%",
                 fontSize: "16px",
                 color: "#fff",
-                backgroundColor: isOn ? "#4CAF50" : "#f44336", // zielony dla ON, czerwony dla OFF
+                backgroundColor: isOn ? "#4CAF50" : "#f44336", 
                 border: "none",
                 borderRadius: "5px",
                 cursor: "pointer",

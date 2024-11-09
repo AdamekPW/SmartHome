@@ -1,20 +1,52 @@
-import { useState, useEffect } from "react";
-import styles from "./styles/App.module.scss";
-import io from "socket.io-client";
-import Button from "./button";
+// App.jsx
 
+import React, { useState, useEffect } from "react";
+import styles from "./styles/App.module.scss";
+import ToggleButton from "./button";  // Zaimportowanie komponentu ToggleButton
 import Navbar from "./components/Navbar";
 import Home from "./components/Home";
 import FanComponent from "./components/FanComponent";
 import PlugStripComponent from "./components/PlugStripComponent";
 import LedStripComponent from "./components/LedStripComponent";
+import { w3cwebsocket as W3CWebSocket } from "websocket";
 
-// Połączenie z serwerem WebSocket (Flask-SocketIO)
-// const socket = io("http://localhost:7000");
+const client = new W3CWebSocket('ws://localhost:8765');
+const device_id = "Front"
 
 const App = () => {
-    const [selectedModule, setSelectedModule] = useState("home"); // in future: main menu probably (component with logo)
-    // const [temp, setTemp] = useState("");
+    const [selectedModule, setSelectedModule] = useState("home");
+    const [buttonState, setButtonState] = useState(false); 
+    const [temperature, setTemperature] = useState(0);
+
+    const handleButtonClick = (newState) => {
+        setButtonState(newState);  
+        console.log("Stan przycisku:", newState ? "ON" : "OFF");
+        const data = {
+            device_id: device_id,
+            data: newState ? "ON" : "OFF"
+        };
+        client.send(JSON.stringify(data));
+    };
+
+    useEffect(() => {
+
+        client.onopen = () => {
+            console.log(`${device_id} connected to the server.`);
+            client.send(device_id);
+        };
+
+        client.onmessage = (message) => {
+            const data = JSON.parse(message.data);
+            console.log(`${device_id} received data from server: ${data.command.data}°C`);
+            if (data.command.device_id === "Temp") {
+                setTemperature(data.command.data);
+            }
+        };
+
+        return () => {
+            client.close();
+        };
+    }, []);
 
     const renderModuleComponent = () => {
         switch (selectedModule) {
@@ -31,28 +63,14 @@ const App = () => {
         }
     };
 
-    // useEffect(() => {
-    //     // Odbieranie wiadomości od serwera
-    //     socket.on("temperature_update", (data) => {
-    //         console.log("Otrzymano probke temperatury:", data);
-    //         setTemp(data);
-    //     });
-
-    //     // Czyszczenie socketu po odłączeniu komponentu
-    //     return () => {
-    //         socket.off("temperature_update");
-    //     };
-    // }, []);
-
     return (
         <main>
-            <Navbar
-                selectedModule={selectedModule}
-                onModuleSelect={setSelectedModule}
-            />
+            <Navbar selectedModule={selectedModule} onModuleSelect={setSelectedModule} />
             {renderModuleComponent()}
-            {/* <Button /> */}
-            {/* <p>Temperatura: {temp.temp} °C</p> */}
+            <ToggleButton onClick={handleButtonClick} />
+            <div className={styles.temperature}>
+                <h2>Temperature: {temperature}°C</h2>
+            </div>
         </main>
     );
 };
