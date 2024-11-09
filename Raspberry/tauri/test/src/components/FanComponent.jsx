@@ -12,7 +12,7 @@ const FanComponent = () => {
     return (
         <div className={styles.FanContent}>
             <div className={styles.FanChart}>
-                {/* Miejsce na wykres */}
+                {/* Miejsce na wykres + test*/}
             </div>
             <div className={styles.FanInfo}>
                 <div className={styles.FanButton}>
