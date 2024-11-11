@@ -22,8 +22,9 @@ const App = () => {
         setButtonState(newState);  
         console.log("Stan przycisku:", newState ? "ON" : "OFF");
         const data = {
-            device_id: device_id,
-            data: newState ? "ON" : "OFF"
+            sender_id: device_id,
+            data: newState ? "ON" : "OFF",
+            "target_id": "Temp"
         };
         client.send(JSON.stringify(data));
     };
@@ -38,7 +39,7 @@ const App = () => {
         client.onmessage = (message) => {
             const data = JSON.parse(message.data);
             console.log(`${device_id} received data from server: ${data.command.data}°C`);
-            if (data.command.device_id === "Temp") {
+            if (data.command.sender_id === "Temp") {
                 setTemperature(data.command.data);
             }
         };

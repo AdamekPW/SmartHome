@@ -19,12 +19,6 @@ class Temperature(Base):
     sample = Column(Integer)
     created = Column(String, default=lambda: datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"), primary_key=True)
 
-class Button(Base):
-    __tablename__ = 'Button'
-    id = Column(Integer, primary_key=True, autoincrement=True)
-    mode = Column(String)
-    created = Column(String, default=lambda: datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
-
 # Utworzenie tabeli (jeśli jeszcze nie istnieje)
 Base.metadata.create_all(engine)
 
@@ -33,62 +27,58 @@ connected_devices = {}
 
 async def handle_connection(websocket, path):
     # Przypisz ID na podstawie ścieżki połączenia lub wiadomości inicjującej
-    device_id = await websocket.recv()  # Zakładamy, że klient wyśle swój ID zaraz po połączeniu
-    connected_devices[device_id] = websocket
-    print(f"Device {device_id} connected.")
+    sender_id = await websocket.recv()  # Zakładamy, że klient wyśle swój ID zaraz po połączeniu
+    connected_devices[sender_id] = websocket
+    print(f"Device {sender_id} connected.")
 
     try:
         async for message in websocket:
             data = json.loads(message)
-            await process_device_data(device_id, data)
+            await process_device_data(data)
     except websockets.exceptions.ConnectionClosed as e:
-        print(f"Connection closed for {device_id}: {e}")
+        print(f"Connection closed for {sender_id}: {e}")
     finally:
         # Usuń urządzenie po rozłączeniu
-        del connected_devices[device_id]
-        print(f"Device {device_id} disconnected.")
+        del connected_devices[sender_id]
+        print(f"Device {sender_id} disconnected.")
 
-async def send_command_to_device(device_id, command):
-    if device_id in connected_devices:
+async def send_command_to_device(sender_id, command):
+    if sender_id in connected_devices:
         try:
-            await connected_devices[device_id].send(json.dumps({"command": command}))
-            #print(f"Sent command to {device_id}: {command}")
+            await connected_devices[sender_id].send(json.dumps({"command": command}))
+            #print(f"Sent command to {sender_id}: {command}")
         except websockets.exceptions.ConnectionClosed as e:
-            print(f"Failed to send command to {device_id}, connection closed: {e}")
-            del connected_devices[device_id]
+            print(f"Failed to send command to {sender_id}, connection closed: {e}")
+            del connected_devices[sender_id]
     else:
-        print(f"Device {device_id} not connected.")
+        print(f"Device {sender_id} not connected.")
 
-async def process_device_data(device_id, data):
+async def process_device_data(data):
     # Weryfikacja, że dane są w prawidłowym formacie
     if "data" not in data:
         print("Invalid data format received.")
         return
+    sender_id = data.get("sender_id")
+    target_id = data.get("target_id")
     
-    if device_id == "Front":
-        print(f"Received button state data from {device_id}: {data['data']}")
+    if sender_id == "Front" and target_id == "Temp":
 
-        try:
-            new_sample = Button(mode=data['data'])
-            session.add(new_sample)
-            session.commit()
-        except Exception as e:
-            print(f"Failed to save button state data to database: {e}")
+        print(f"Received button state data from {sender_id}: {data['data']}")
+        await send_command_to_device(target_id, data)
+        print(f"Sent button data to {target_id}: button state: {data['data']}")
+        
+    elif sender_id == "Temp" and target_id == "Front":
+        print(f"Received temperature data from {sender_id}: {data['data']}°C")
 
-        await send_command_to_device("Temp", data)
-        print(f"Sent button data to Temp: button state: {data['data']}")
-    elif device_id == "Temp":
-        print(f"Received temperature data from {device_id}: {data['data']}°C")
+        # try:
+        #     new_sample = Temperature(sample=data['data'])
+        #     session.add(new_sample)
+        #     session.commit()
+        # except Exception as e:
+        #     print(f"Failed to save temperature data to database: {e}")
 
-        try:
-            new_sample = Temperature(sample=data['data'])
-            session.add(new_sample)
-            session.commit()
-        except Exception as e:
-            print(f"Failed to save temperature data to database: {e}")
-
-        await send_command_to_device("Front", data)
-        print(f"Sent temperature data to Front: {data['data']}°C")
+        await send_command_to_device(target_id, data)
+        print(f"Sent temperature data to {target_id}: {data['data']}°C")
 
 # Start serwera WebSocket
 async def main():
