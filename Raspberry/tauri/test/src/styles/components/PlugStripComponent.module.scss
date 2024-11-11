@@ -6,7 +6,7 @@
     margin-right: auto;
     flex-direction: row;
     justify-content: space-around;
-    width: calc(100vw - 8.125em);
+    width: 35em;
     align-items: center;
     height: 100vh;
     padding: 0em 0.5em;
@@ -14,14 +14,14 @@
 
 .PlugChart {
     background-color: $medium-grey;
-    width: 60%;
-    height: 75%;
+    width: 24rem;
+    height: 24rem;
 }
 
 .Plug {
     display: flex;
     background-color: $medium-grey;
-    width: 25vw;
+    width: 10rem;
     justify-content: space-around;
     flex-direction: column;
     height: 75%;
@@ -32,7 +32,7 @@
     margin: 0 auto;
     background-color: $light-grey;
     border-radius: 50%;
-    width: 60%;
+    width: 6rem;
     aspect-ratio: 1 / 1;
     border: 10px solid $green;
     display: flex;
@@ -57,7 +57,7 @@
     margin: 0 auto;
     background-color: $light-grey;
     border-radius: 50%;
-    width: 60%;
+    width: 6rem;
     aspect-ratio: 1 / 1;
     border: 10px solid $red;
     display: flex;
@@ -113,5 +113,10 @@
     
     .Dot:last-of-type {
         margin-left: 0%;
+    }
+    .PlugChart {
+        margin-top: 10px;
+        width: 24rem;
+        height: 20rem;
     }
 }
