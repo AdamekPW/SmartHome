@@ -23,8 +23,9 @@ async def send_temperature_data(websocket, device_id):
         # Generowanie losowej temperatury
         temperature = round(random.uniform(20.0, 25.0), 2)
         data = {
-            "device_id": device_id,
-            "data": temperature
+            "sender_id": device_id,
+            "data": temperature,
+            "target_id": "Front"
         }
         # Wysyłamy dane do serwera
         await websocket.send(json.dumps(data))
@@ -39,7 +40,7 @@ async def receive_data(websocket, device_id):
             # Odbieramy wiadomości od serwera
             message = await websocket.recv()
             data = json.loads(message)
-            print(f"{device_id} received data from server: {data['command']['data']}°C")
+            print(f"{device_id} received data from server: {data['command']['data']}")
         except websockets.exceptions.ConnectionClosed:
             print(f"{device_id} disconnected from server.")
             break
