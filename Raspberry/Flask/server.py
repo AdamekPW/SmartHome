@@ -24,12 +24,13 @@ Base.metadata.create_all(engine)
 
 
 connected_devices = {}
-
+white_list = ['ESP1', 'ESP2', 'ESP3', 'Front']
 async def handle_connection(websocket, path):
     # Przypisz ID na podstawie ścieżki połączenia lub wiadomości inicjującej
     sender_id = await websocket.recv()  # Zakładamy, że klient wyśle swój ID zaraz po połączeniu
     connected_devices[sender_id] = websocket
     print(f"Device {sender_id} connected.")
+
 
     try:
         async for message in websocket:
@@ -38,6 +39,8 @@ async def handle_connection(websocket, path):
     except websockets.exceptions.ConnectionClosed as e:
         print(f"Connection closed for {sender_id}: {e}")
     finally:
+        # Potrzebne w celu naprawienia buga
+        await connected_devices[sender_id].close()
         # Usuń urządzenie po rozłączeniu
         del connected_devices[sender_id]
         print(f"Device {sender_id} disconnected.")
@@ -63,6 +66,7 @@ async def process_device_data(data):
         return
     sender_id = data.get("sender_id")
     target_id = data.get("target_id")
+
     
     if sender_id == "Front" and target_id == "ESP1":
 
