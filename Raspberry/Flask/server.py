@@ -45,7 +45,10 @@ async def handle_connection(websocket, path):
 async def send_command_to_device(sender_id, command):
     if sender_id in connected_devices:
         try:
-            await connected_devices[sender_id].send(json.dumps({"command": command}))
+            if (command["target_id"] == "Front"):
+                await connected_devices[sender_id].send(json.dumps({"command": command}))
+            else:
+                await connected_devices[sender_id].send(command["data"])
             #print(f"Sent command to {sender_id}: {command}")
         except websockets.exceptions.ConnectionClosed as e:
             print(f"Failed to send command to {sender_id}, connection closed: {e}")
@@ -64,7 +67,7 @@ async def process_device_data(data):
     if sender_id == "Front" and target_id == "ESP1":
 
         print(f"Received button state data from {sender_id}: {data['data']}")
-        await send_command_to_device(target_id, data['data'])
+        await send_command_to_device(target_id, data)
         print(f"Sent button data to {target_id}: button state: {data['data']}")
         
     elif sender_id == "ESP1" and target_id == "Front":

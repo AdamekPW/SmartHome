@@ -39,8 +39,7 @@ async def receive_data(websocket, device_id):
         try:
             # Odbieramy wiadomości od serwera
             message = await websocket.recv()
-            data = json.loads(message)
-            print(f"{device_id} received data from server: {data}")
+            print(f"{device_id} received data from server: {message}")
         except websockets.exceptions.ConnectionClosed:
             print(f"{device_id} disconnected from server.")
             break
