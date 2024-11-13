@@ -61,13 +61,13 @@ async def process_device_data(data):
     sender_id = data.get("sender_id")
     target_id = data.get("target_id")
     
-    if sender_id == "Front" and target_id == "Temp":
+    if sender_id == "Front" and target_id == "ESP1":
 
         print(f"Received button state data from {sender_id}: {data['data']}")
         await send_command_to_device(target_id, data)
         print(f"Sent button data to {target_id}: button state: {data['data']}")
         
-    elif sender_id == "Temp" and target_id == "Front":
+    elif sender_id == "ESP1" and target_id == "Front":
         print(f"Received temperature data from {sender_id}: {data['data']}°C")
 
         # try:
