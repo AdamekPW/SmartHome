@@ -30,23 +30,25 @@
 }
 .buttonOn{
     margin-top: 2rem;
-    padding: 1rem 2rem;
     background-color: $light-grey;
     border-radius: 10px;
     border: 10px solid $green;
     font-size: 2em;
     font-weight: bold;
     box-sizing: border-box;
+    min-width: 7rem;
+    height: 4rem;
 }
 .buttonOff{
     margin-top: 2rem;
-    padding: 1rem 2rem;
     background-color: $light-grey;
     border-radius: 10px;
     border: 10px solid $red;
     font-size: 2em;
     font-weight: bold;
     box-sizing: border-box;
+    min-width: 7rem;
+    height: 4rem;
 }
 
 .TempInfo{
@@ -79,27 +81,28 @@
         align-items: center;
         height: fit-content;
     }
+    
     .buttonOn{
         margin-top: 1rem;
-        padding: 0.5rem 1.25rem;
         background-color: $light-grey;
         border-radius: 10px;
         border: 10px solid $green;
         font-size: 1em;
         font-weight: bold;
-        width: 6rem;
+        width: 3rem;
+        height: 3rem;
         box-sizing: border-box;
     }
     .buttonOff{
         margin-top: 1rem;
-        padding: 0.5rem 1.25rem;
         background-color: $light-grey;
         border-radius: 10px;
         border: 10px solid $red;
         font-size: 1em;
         font-weight: bold;
         box-sizing: border-box;
-        width: 6rem;
+        width: 3rem;
+        height: 3rem;
     }
     
     .TempInfo{
