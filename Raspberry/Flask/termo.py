@@ -5,7 +5,7 @@ import random
 
 async def client():
     uri = "ws://localhost:8765"
-    device_id = "Temp"
+    device_id = "ESP1"
 
     async with websockets.connect(uri) as websocket:
         # Wysyłamy swój device_id zaraz po połączeniu
