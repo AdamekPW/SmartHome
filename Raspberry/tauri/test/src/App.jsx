@@ -14,19 +14,8 @@ const device_id = "Front"
 
 const App = () => {
     const [selectedModule, setSelectedModule] = useState("home");
-    const [buttonState, setButtonState] = useState(false); 
     const [temperature, setTemperature] = useState(0);
-
-    const handleButtonClick = (newState) => {
-        setButtonState(newState);  
-        console.log("Stan przycisku:", newState ? "ON" : "OFF");
-        const data = {
-            sender_id: device_id,
-            data: newState ? "ON" : "OFF",
-            "target_id": "ESP1"
-        };
-        client.send(JSON.stringify(data));
-    };
+    const [plugPower, setPlugPower] = useState(0);
 
     useEffect(() => {
 
@@ -40,6 +29,9 @@ const App = () => {
             console.log(`${device_id} received data from server: ${data.command.data}°C`);
             if (data.command.sender_id === "ESP1") {
                 setTemperature(data.command.data);
+            }
+            if (data.command.sender_id === "ESP2") {
+                setPlugPower(data.command.data);
             }
         };
 
@@ -55,7 +47,7 @@ const App = () => {
             case "fan":
                 return <FanComponent client={client} device_id={device_id} temperature={temperature}/>;
             case "plugstrip":
-                return <PlugStripComponent />;
+                return <PlugStripComponent client={client} device_id={device_id} plugPower={plugPower}/>;
             case "ledstrip":
                 return <LedStripComponent />;
             default:
