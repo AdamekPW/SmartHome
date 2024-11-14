@@ -2,7 +2,6 @@
 
 import React, { useState, useEffect } from "react";
 import styles from "./styles/App.module.scss";
-import ToggleButton from "./button";  // Zaimportowanie komponentu ToggleButton
 import Navbar from "./components/Navbar";
 import Home from "./components/Home";
 import FanComponent from "./components/FanComponent";
@@ -54,7 +53,7 @@ const App = () => {
             case "home":
                 return <Home />;
             case "fan":
-                return <FanComponent />;
+                return <FanComponent client={client} device_id={device_id} temperature={temperature}/>;
             case "plugstrip":
                 return <PlugStripComponent />;
             case "ledstrip":
@@ -68,10 +67,6 @@ const App = () => {
         <main>
             <Navbar selectedModule={selectedModule} onModuleSelect={setSelectedModule} />
             {renderModuleComponent()}
-            <ToggleButton onClick={handleButtonClick} />
-            <div className={styles.temperature}>
-                <h2>Temperature: {temperature}°C</h2>
-            </div>
         </main>
     );
 };
