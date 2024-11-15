@@ -98,6 +98,18 @@ async def process_device_data(data):
             print(f"Received button state data from {sender_id}: {data['data']}")
             await send_command_to_device(target_id, data)
             print(f"Sent button data to {target_id}: button state: {data['data']}")
+    
+    elif sender_id == "ESP3" and target_id == "Front":
+
+        print(f"Received power data from {sender_id}: {data['data']}W")
+        await send_command_to_device(target_id, data)
+        print(f"Sent power data to {target_id}: {data['data']}W")
+
+    elif sender_id == "Front" and target_id == "ESP3":
+
+        print(f"Received button state data from {sender_id}: {data['data']}")
+        await send_command_to_device(target_id, data)
+        print(f"Sent button data to {target_id}: button state: {data['data']}")
 
 
 # Start serwera WebSocket

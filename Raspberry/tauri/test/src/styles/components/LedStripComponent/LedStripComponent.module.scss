@@ -4,3 +4,26 @@
     display: flex;
     align-items: center;
 }
+
+.buttonOn{
+    margin-top: 2rem;
+    background-color: $light-grey;
+    border-radius: 10px;
+    border: 10px solid $green;
+    font-size: 2em;
+    font-weight: bold;
+    box-sizing: border-box;
+    min-width: 7rem;
+    height: 4rem;
+}
+.buttonOff{
+    margin-top: 2rem;
+    background-color: $light-grey;
+    border-radius: 10px;
+    border: 10px solid $red;
+    font-size: 2em;
+    font-weight: bold;
+    box-sizing: border-box;
+    min-width: 7rem;
+    height: 4rem;
+}

@@ -16,6 +16,7 @@ const App = () => {
     const [selectedModule, setSelectedModule] = useState("home");
     const [temperature, setTemperature] = useState(0);
     const [plugPower, setPlugPower] = useState(0);
+    const [ledStripPower, setLedStripPower] = useState(0);
 
     useEffect(() => {
 
@@ -33,6 +34,9 @@ const App = () => {
             if (data.command.sender_id === "ESP2") {
                 setPlugPower(data.command.data);
             }
+            if (data.command.sender_id === "ESP3") {
+                setLedStripPower(data.command.data);
+            }
         };
 
         return () => {
@@ -49,7 +53,7 @@ const App = () => {
             case "plugstrip":
                 return <PlugStripComponent client={client} device_id={device_id} plugPower={plugPower}/>;
             case "ledstrip":
-                return <LedStripComponent />;
+                return <LedStripComponent client={client} device_id={device_id} ledStripPower={ledStripPower}/>;
             default:
                 return "home";
         }
