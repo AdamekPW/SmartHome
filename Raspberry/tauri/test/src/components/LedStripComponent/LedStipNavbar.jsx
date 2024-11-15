@@ -6,6 +6,7 @@ import { ledOptions } from "./ledOptions";
 const LedStripNavbar = ({
     selectedLedId,
     onSelectLedId,
+    isMobileViewActive,
     isNavbarOpen,
     onOpenNavbar,
 }) => {
@@ -29,7 +30,10 @@ const LedStripNavbar = ({
                     >
                         <p
                             className={styles.ledOption}
-                            onClick={() => onSelectLedId(option.id)}
+                            onClick={() => {
+                                onSelectLedId(option.id);
+                                isMobileViewActive ? toggleMenu() : null;
+                            }}
                         >
                             {option.name}
                         </p>

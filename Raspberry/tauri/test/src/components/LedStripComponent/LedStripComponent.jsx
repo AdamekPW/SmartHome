@@ -8,7 +8,7 @@ const LedStripComponent = ({ client, device_id, ledStripPower }) => {
     const [selectedLedId, setSelectedLedId] = useState(0); // id: 0, mode name: RGB Custom
     const [isOn, setIsOn] = useState(false);
     const [isNavbarOpen, setIsNavbarOpen] = useState(true);
-    const [isMobileViewActive, setIsMobileViewActive] = useState(false);
+    const [isMobileViewActive, setIsMobileViewActive] = useState(true);
 
     useEffect(() => {
         const mediaQuery = window.matchMedia("(max-width: 32rem)");
@@ -26,7 +26,7 @@ const LedStripComponent = ({ client, device_id, ledStripPower }) => {
         return () => {
             mediaQuery.removeEventListener("change", handleResize);
         };
-    }, [isMobileViewActive]);
+    }, []);
 
     const handleToggle = () => {
         const newState = !isOn;
@@ -48,6 +48,7 @@ const LedStripComponent = ({ client, device_id, ledStripPower }) => {
             <LedStripNavbar
                 selectedLedId={selectedLedId}
                 onSelectLedId={setSelectedLedId}
+                isMobileViewActive={isMobileViewActive}
                 isNavbarOpen={isNavbarOpen}
                 onOpenNavbar={setIsNavbarOpen}
             />
@@ -55,6 +56,8 @@ const LedStripComponent = ({ client, device_id, ledStripPower }) => {
                 <></>
             ) : (
                 <div>
+                    {console.log(isNavbarOpen)}
+                    {console.log(isMobileViewActive)}
                     <div>
                         <p>{selectedLedId}</p>
                     </div>
