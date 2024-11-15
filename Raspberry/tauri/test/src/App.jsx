@@ -6,7 +6,7 @@ import Navbar from "./components/Navbar";
 import Home from "./components/Home";
 import FanComponent from "./components/FanComponent";
 import PlugStripComponent from "./components/PlugStripComponent";
-import LedStripComponent from "./components/LedStripComponent";
+import LedStripComponent from "./components/LedStripComponent/LedStripComponent";
 import { w3cwebsocket as W3CWebSocket } from "websocket";
 
 const client = new W3CWebSocket('ws://localhost:8765');
