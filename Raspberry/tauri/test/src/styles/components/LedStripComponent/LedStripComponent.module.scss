@@ -22,3 +22,11 @@
     border: 6px solid $green;
 }
 
+@media (max-width: 32rem) {
+    .container {
+        height: calc(100vh - 4em); 
+    }
+
+}
+
+

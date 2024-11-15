@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import styles from "../../styles/components/LedStripComponent/LedStripComponent.module.scss";
 
@@ -7,6 +7,26 @@ import LedStripNavbar from "./LedStipNavbar";
 const LedStripComponent = ({ client, device_id, ledStripPower }) => {
     const [selectedLedId, setSelectedLedId] = useState(0); // id: 0, mode name: RGB Custom
     const [isOn, setIsOn] = useState(false);
+    const [isNavbarOpen, setIsNavbarOpen] = useState(true);
+    const [isMobileViewActive, setIsMobileViewActive] = useState(false);
+
+    useEffect(() => {
+        const mediaQuery = window.matchMedia("(max-width: 32rem)");
+
+        const handleResize = (e) => {
+            e.matches
+                ? setIsMobileViewActive(true)
+                : setIsMobileViewActive(false);
+        };
+
+        setIsNavbarOpen(true);
+
+        mediaQuery.addEventListener("change", handleResize);
+
+        return () => {
+            mediaQuery.removeEventListener("change", handleResize);
+        };
+    }, [isMobileViewActive]);
 
     const handleToggle = () => {
         const newState = !isOn;
@@ -28,19 +48,29 @@ const LedStripComponent = ({ client, device_id, ledStripPower }) => {
             <LedStripNavbar
                 selectedLedId={selectedLedId}
                 onSelectLedId={setSelectedLedId}
+                isNavbarOpen={isNavbarOpen}
+                onOpenNavbar={setIsNavbarOpen}
             />
-            <div>
-                <p>{selectedLedId}</p>
-            </div>
-            <div className={styles.FanButton}>
-                <button
-                    onClick={handleToggle}
-                    className={isOn ? styles.buttonOn : styles.buttonOff}
-                >
-                    {isOn ? "ON" : "OFF"}
-                </button>
-                <p>{ledStripPower}</p>
-            </div>
+            {isMobileViewActive && isNavbarOpen ? (
+                <></>
+            ) : (
+                <div>
+                    <div>
+                        <p>{selectedLedId}</p>
+                    </div>
+                    <div className={styles.FanButton}>
+                        <button
+                            onClick={handleToggle}
+                            className={
+                                isOn ? styles.buttonOn : styles.buttonOff
+                            }
+                        >
+                            {isOn ? "ON" : "OFF"}
+                        </button>
+                        <p>{ledStripPower}</p>
+                    </div>
+                </div>
+            )}
         </div>
     );
 };

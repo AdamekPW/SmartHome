@@ -12,6 +12,19 @@
     border-radius: 0 0.5em 0.5em 0;
 }
 
+.hamburger {
+    font-size: 1.75em;
+    background: none;
+    border: none;
+    color: $text;
+    position: absolute;
+    top: 1em;
+    left: 1em;
+    cursor: pointer;
+    display: block;
+    display: none;
+}
+
 .optionWithLine {
     display: flex;
     flex-direction: column;
@@ -21,7 +34,7 @@
 
 .line {
     width: 10em;
-    margin-bottom: 1em; // check if it destroys anything
+    margin-bottom: 4vh;
 }
 
 .ledOptionElement {
@@ -37,5 +50,32 @@
 
     &.active {
         background-color: $medium-light-grey;
+    }
+}
+
+@media (max-width: 32rem) {
+    .container {
+        height: 95%;
+        width: 0%; 
+        padding: 4vh 0;
+        background: none;
+        box-shadow: none;
+        border-radius: 0;
+        transition: 0.2s ease;
+
+        &.active {
+            height: 90%;
+            width: 100%;
+            background-color: $dark-grey;
+            box-shadow: 2px 2px 4px black;
+        }
+    }
+
+    .hamburger {
+        display: block;
+    }
+
+    .line {
+        width: 50vw;
     }
 }

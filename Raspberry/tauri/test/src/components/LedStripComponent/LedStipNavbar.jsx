@@ -1,8 +1,18 @@
+import { useState } from "react";
 import styles from "../../styles/components/LedStripComponent/LedStripNavbar.module.scss";
 
 import { ledOptions } from "./ledOptions";
 
-const LedStripNavbar = ({ selectedLedId, onSelectLedId }) => {
+const LedStripNavbar = ({
+    selectedLedId,
+    onSelectLedId,
+    isNavbarOpen,
+    onOpenNavbar,
+}) => {
+    const toggleMenu = () => {
+        onOpenNavbar((prevState) => !prevState);
+    };
+
     const displayLedOptions = () => {
         return ledOptions.map((option) => {
             return (
@@ -29,9 +39,16 @@ const LedStripNavbar = ({ selectedLedId, onSelectLedId }) => {
         });
     };
     return (
-        <div className={styles.container}>
+        <div
+            className={`${styles.container} ${
+                isNavbarOpen ? styles.active : <></>
+            }`}
+        >
             {/* <p>Pokaż wykres</p> */}
-            {displayLedOptions()}
+            <button className={styles.hamburger} onClick={toggleMenu}>
+                ☰
+            </button>
+            {isNavbarOpen ? displayLedOptions() : <></>}
         </div>
     );
 };
