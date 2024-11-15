@@ -29,13 +29,13 @@ const App = () => {
             const data = JSON.parse(message.data);
             console.log(`${device_id} received data from server: ${data.command.data}°C`);
             if (data.command.sender_id === "ESP1") {
-                setTemperature(data.command.data);
+                setTemperature(parseFloat(data.command.data.toFixed(2)));
             }
             if (data.command.sender_id === "ESP2") {
-                setPlugPower(data.command.data);
+                setPlugPower(parseFloat(data.command.data.toFixed(2)));
             }
             if (data.command.sender_id === "ESP3") {
-                setLedStripPower(data.command.data);
+                setLedStripPower(parseFloat(data.command.data.toFixed(2)));
             }
         };
 
