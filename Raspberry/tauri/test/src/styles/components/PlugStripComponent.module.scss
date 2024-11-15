@@ -28,16 +28,21 @@
     border-radius: 10px;
 }
 
-.CircleOn {
+.CircleOn, .CircleOff {
     margin: 0 auto;
     background-color: $light-grey;
     border-radius: 50%;
     width: 6rem;
     aspect-ratio: 1 / 1;
-    border: 10px solid $green;
+    border: 8px solid $red;
     display: flex;
     align-items: center;
     justify-content: center;
+    cursor: pointer;
+}
+
+.CircleOn {
+    border: 8px solid $green;
 }
 
 .Dot {
@@ -53,17 +58,6 @@
     margin-left: 10%;
 }
 
-.CircleOff {
-    margin: 0 auto;
-    background-color: $light-grey;
-    border-radius: 50%;
-    width: 6rem;
-    aspect-ratio: 1 / 1;
-    border: 10px solid $red;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
 
 @media (max-width: 32rem) {
     .PlugContent {

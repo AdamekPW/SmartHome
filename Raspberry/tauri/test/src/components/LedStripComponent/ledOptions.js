@@ -1,5 +1,9 @@
 export const ledOptions = [
     {
+        id: 0,
+        name: "RGB Custom",
+    },
+    {
         id: 1,
         name: "Rainbow",
     },

@@ -7,7 +7,7 @@ const LedStripNavbar = ({ selectedLedId, onSelectLedId }) => {
         return ledOptions.map((option) => {
             return (
                 <div className={styles.optionWithLine} key={option.id}>
-                    {option.id === 1 ? (
+                    {option.id === 0 ? (
                         <></>
                     ) : (
                         <hr className={styles.line}></hr>
