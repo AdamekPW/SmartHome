@@ -1,29 +1,53 @@
-import { useState, useEffect } from "react";
-import styles from "./styles/App.module.scss";
-import io from "socket.io-client";
-import Button from "./button";
+// App.jsx
 
+import React, { useState, useEffect } from "react";
+import styles from "./styles/App.module.scss";
 import Navbar from "./components/Navbar";
 import Home from "./components/Home";
 import FanComponent from "./components/FanComponent";
 import PlugStripComponent from "./components/PlugStripComponent";
 import LedStripComponent from "./components/LedStripComponent/LedStripComponent";
+import { w3cwebsocket as W3CWebSocket } from "websocket";
 
-// Połączenie z serwerem WebSocket (Flask-SocketIO)
-// const socket = io("http://localhost:7000");
+const client = new W3CWebSocket('ws://localhost:8765');
+const device_id = "Front"
 
 const App = () => {
-    const [selectedModule, setSelectedModule] = useState("home"); // in future: main menu probably (component with logo)
-    // const [temp, setTemp] = useState("");
+    const [selectedModule, setSelectedModule] = useState("home");
+    const [temperature, setTemperature] = useState(0);
+    const [plugPower, setPlugPower] = useState(0);
+
+    useEffect(() => {
+
+        client.onopen = () => {
+            console.log(`${device_id} connected to the server.`);
+            client.send(device_id);
+        };
+
+        client.onmessage = (message) => {
+            const data = JSON.parse(message.data);
+            console.log(`${device_id} received data from server: ${data.command.data}°C`);
+            if (data.command.sender_id === "ESP1") {
+                setTemperature(data.command.data);
+            }
+            if (data.command.sender_id === "ESP2") {
+                setPlugPower(data.command.data);
+            }
+        };
+
+        return () => {
+            client.close();
+        };
+    }, []);
 
     const renderModuleComponent = () => {
         switch (selectedModule) {
             case "home":
                 return <Home />;
             case "fan":
-                return <FanComponent />;
+                return <FanComponent client={client} device_id={device_id} temperature={temperature}/>;
             case "plugstrip":
-                return <PlugStripComponent />;
+                return <PlugStripComponent client={client} device_id={device_id} plugPower={plugPower}/>;
             case "ledstrip":
                 return <LedStripComponent />;
             default:
@@ -31,28 +55,10 @@ const App = () => {
         }
     };
 
-    // useEffect(() => {
-    //     // Odbieranie wiadomości od serwera
-    //     socket.on("temperature_update", (data) => {
-    //         console.log("Otrzymano probke temperatury:", data);
-    //         setTemp(data);
-    //     });
-
-    //     // Czyszczenie socketu po odłączeniu komponentu
-    //     return () => {
-    //         socket.off("temperature_update");
-    //     };
-    // }, []);
-
     return (
         <main>
-            <Navbar
-                selectedModule={selectedModule}
-                onModuleSelect={setSelectedModule}
-            />
+            <Navbar selectedModule={selectedModule} onModuleSelect={setSelectedModule} />
             {renderModuleComponent()}
-            {/* <Button /> */}
-            {/* <p>Temperatura: {temp.temp} °C</p> */}
         </main>
     );
 };
