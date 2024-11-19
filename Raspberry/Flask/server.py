@@ -87,12 +87,12 @@ async def process_device_data(data):
     elif sender_id == "ESP1" and target_id == "Front":
         print(f"Received temperature data from {sender_id}: {data['data']}°C")
 
-        try:
-            new_sample = Temperature(sample=data['data'])
-            session.add(new_sample)
-            session.commit()
-        except Exception as e:
-            print(f"Failed to save temperature data to database: {e}")
+        # try:
+        #     new_sample = Temperature(sample=data['data'])
+        #     session.add(new_sample)
+        #     session.commit()
+        # except Exception as e:
+        #     print(f"Failed to save temperature data to database: {e}")
 
         await send_command_to_device(target_id, data)
         print(f"Sent temperature data to {target_id}: {data['data']}°C")
@@ -101,12 +101,12 @@ async def process_device_data(data):
 
         print(f"Received power data from {sender_id}: {data['data']}W")
 
-        try:
-            new_sample = PowerPlug(sample=data['data'])
-            session.add(new_sample)
-            session.commit()
-        except Exception as e:
-            print(f"Failed to save power data to database: {e}")
+        # try:
+        #     new_sample = PowerPlug(sample=data['data'])
+        #     session.add(new_sample)
+        #     session.commit()
+        # except Exception as e:
+        #     print(f"Failed to save power data to database: {e}")
 
         await send_command_to_device(target_id, data)
         print(f"Sent power data to {target_id}: {data['data']}W")
@@ -121,14 +121,14 @@ async def process_device_data(data):
 
         print(f"Received power data from {sender_id}: {data['data']}W")
 
-        try:
-            new_sample = PowerLED(sample=data['data'])
-            session.add(new_sample)
-            session.commit()
-        except Exception as e:
-            print(f"Failed to save power data to database: {e}")
+        # try:
+        #     new_sample = PowerLED(sample=data['data'])
+        #     session.add(new_sample)
+        #     session.commit()
+        # except Exception as e:
+        #     print(f"Failed to save power data to database: {e}")
+# 
 
-            
         await send_command_to_device(target_id, data)
         print(f"Sent power data to {target_id}: {data['data']}W")
 
