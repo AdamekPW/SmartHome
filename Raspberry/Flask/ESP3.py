@@ -1,0 +1,48 @@
+import asyncio
+import websockets
+import json
+import random
+
+async def client():
+    uri = "ws://localhost:8765"
+    device_id = "ESP3"
+
+    async with websockets.connect(uri) as websocket:
+        # Wysyłamy swój device_id zaraz po połączeniu
+        await websocket.send(device_id)
+        print(f"{device_id} connected to the server.")
+        
+        # Wysyłanie danych i odbieranie wiadomości równolegle
+        await asyncio.gather(
+            send_power_data(websocket, device_id),
+            receive_data(websocket, device_id)
+        )
+
+async def send_power_data(websocket, device_id):
+    while True:
+        # Generowanie losowej temperatury
+        power = round(random.uniform(20.0, 25.0), 2)
+        data = {
+            "sender_id": device_id,
+            "data": power,
+            "target_id": "Front"
+        }
+        # Wysyłamy dane do serwera
+        await websocket.send(json.dumps(data))
+        print(f"{device_id} sent power data: {power}W")
+        
+        # Czekamy 5 sekund przed wysłaniem kolejnej wartości
+        await asyncio.sleep(random.randint(2, 8))
+
+async def receive_data(websocket, device_id):
+    while True:
+        try:
+            # Odbieramy wiadomości od serwera
+            message = await websocket.recv()
+            print(f"{device_id} received data from server: {message}")
+        except websockets.exceptions.ConnectionClosed:
+            print(f"{device_id} disconnected from server.")
+            break
+
+# Uruchomienie klienta
+asyncio.run(client())

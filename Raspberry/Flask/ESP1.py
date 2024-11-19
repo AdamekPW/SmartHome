@@ -5,7 +5,7 @@ import random
 
 async def client():
     uri = "ws://localhost:8765"
-    device_id = "Temp"
+    device_id = "ESP1"
 
     async with websockets.connect(uri) as websocket:
         # Wysyłamy swój device_id zaraz po połączeniu
@@ -39,8 +39,7 @@ async def receive_data(websocket, device_id):
         try:
             # Odbieramy wiadomości od serwera
             message = await websocket.recv()
-            data = json.loads(message)
-            print(f"{device_id} received data from server: {data['command']['data']}")
+            print(f"{device_id} received data from server: {message}")
         except websockets.exceptions.ConnectionClosed:
             print(f"{device_id} disconnected from server.")
             break

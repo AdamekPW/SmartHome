@@ -1,5 +1,121 @@
 @use "../vars" as *;
 
-.doUsuniecia {
+.FanContent {
+    display: flex;
+    margin-left: auto;
+    margin-right: auto;
+    flex-direction: row;
+    justify-content: space-around;
+    width: 35em;
+    align-items: center;
+    height: 100vh;
+    padding: 0em 0.5em;
+}
+
+.FanChart {
+    background-color: $medium-grey;
+    width: 24rem;
+    height: 24rem;
+}
+
+.FanInfo {
+    display: flex;
+    width: 10rem;
+    justify-content: space-between;
+    flex-direction: column;
+    height: 75%;
+    border-radius: 10px;
+    align-items: center;
+}
+
+.buttonOff, .buttonOn {
+    margin-top: 2rem;
+    background-color: $light-grey;
+    border-radius: 10px;
+    border: 6px solid $red;
     font-size: 2em;
+    font-weight: bold;
+    box-sizing: border-box;
+    min-width: 7rem;
+    height: 4rem;
+    cursor: pointer;
+}
+
+.buttonOn{
+    border: 6px solid $green;
+}
+
+.TempInfo {
+    font-size: 1.05em;
+    font-weight: bold;
+    text-align: center;
+    justify-content: space-between;
+    flex-direction: column;
+}
+
+.TempText {
+    background-color: $medium-grey;
+    padding: 0.75rem 1em;
+    border-radius: 10px;
+    font-size: 1.75em;
+}
+
+@media (max-width: 32rem) {
+    .FanContent {
+        height: calc(100vh - 4rem);
+        width: 80vw;
+        flex-direction: column;
+        justify-content: space-around;
+    }
+    .FanInfo {
+        display: flex;
+        width: 75%;
+        justify-content: space-around;
+        flex-direction: row;
+        align-items: center;
+        height: fit-content;
+    }
+    
+    .buttonOn{
+        margin-top: 1rem;
+        background-color: $light-grey;
+        border-radius: 10px;
+        border: 10px solid $green;
+        font-size: 1em;
+        font-weight: bold;
+        width: 3rem;
+        height: 3rem;
+        box-sizing: border-box;
+    }
+    .buttonOff{
+        margin-top: 1rem;
+        background-color: $light-grey;
+        border-radius: 10px;
+        border: 10px solid $red;
+        font-size: 1em;
+        font-weight: bold;
+        box-sizing: border-box;
+        width: 3rem;
+        height: 3rem;
+    }
+    
+    .TempInfo{
+        font-size: 1em;
+        font-weight: bold;
+        text-align: center;
+        justify-content: space-around;
+        flex-direction: column;
+    }
+    
+    .TempText{
+        background-color: $medium-grey;
+        padding: 0.75rem 1em;
+        border-radius: 10px;
+        font-size: 1.1em;
+    }
+    .FanChart{
+        margin-top: 10px;
+        width: 24rem;
+        height: 20rem;
+    }
 }

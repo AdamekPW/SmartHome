@@ -1,0 +1,32 @@
+@use "../../vars" as *;
+
+.container {
+    display: flex;
+    align-items: center;
+}
+
+.buttonOff, .buttonOn {
+    margin-top: 2rem;
+    background-color: $light-grey;
+    border-radius: 10px;
+    border: 6px solid $red;
+    font-size: 2em;
+    font-weight: bold;
+    box-sizing: border-box;
+    min-width: 7rem;
+    height: 4rem;
+    cursor: pointer;
+}
+
+.buttonOn{
+    border: 6px solid $green;
+}
+
+@media (max-width: 32rem) {
+    .container {
+        height: calc(100vh - 4em); 
+    }
+
+}
+
+
