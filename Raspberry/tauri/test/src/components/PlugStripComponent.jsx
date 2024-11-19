@@ -5,14 +5,15 @@ import { GiPlainCircle } from "react-icons/gi";
 const PlugStripComponent = ({client, device_id, plugPower}) => {
     const [isOn1, setIsOn1] = useState(false);
     const [isOn2, setIsOn2] = useState(false);
+    const [isOn3, setIsOn3] = useState(false);
 
     const toggleCircle1 = () => {
         const newState = !isOn1;
         setIsOn1(newState);
-        console.log("Stan przycisku 1:", newState ? "ON" : "OFF");
+        console.log("Stan przycisku 1:", newState ? "1" : "0");
         const data = {
             sender_id: device_id,
-            data: (newState ? "ON" : "OFF") + "/" + (isOn2 ? "ON" : "OFF"),
+            data: (newState ? "1" : "0") + "/" + (isOn2 ? "1" : "0") + "/" + (isOn3 ? "1" : "0"),
             "target_id": "ESP2"
         };
         client.send(JSON.stringify(data));
@@ -21,10 +22,21 @@ const PlugStripComponent = ({client, device_id, plugPower}) => {
     const toggleCircle2 = () => {
         const newState = !isOn2;
         setIsOn2(newState);
-        console.log("Stan przycisku 2:", newState ? "ON" : "OFF");
+        console.log("Stan przycisku 2:", newState ? "1" : "0");
         const data = {
             sender_id: device_id,
-            data: (isOn1 ? "ON" : "OFF") + "/" + (newState ? "ON" : "OFF"),
+            data: (isOn1 ? "1" : "0") + "/" + (newState ? "1" : "0") + "/" + (isOn3 ? "1" : "0"),
+            "target_id": "ESP2"
+        };
+        client.send(JSON.stringify(data));
+    };
+    const toggleCircle3 = () => {
+        const newState = !isOn3;
+        setIsOn3(newState);
+        console.log("Stan przycisku 2:", newState ? "1" : "0");
+        const data = {
+            sender_id: device_id,
+            data: (isOn1 ? "1" : "0") + "/" + (isOn2 ? "1" : "0") + + "/" + (newState ? "1" : "0"),
             "target_id": "ESP2"
         };
         client.send(JSON.stringify(data));
@@ -48,6 +60,14 @@ const PlugStripComponent = ({client, device_id, plugPower}) => {
                 <div
                     className={isOn2 ? styles.CircleOn : styles.CircleOff}
                     onClick={toggleCircle2}
+                >
+                    <GiPlainCircle className={styles.Dot} />
+                    <GiPlainCircle className={styles.Dot} />
+                </div>
+
+                <div
+                    className={isOn3 ? styles.CircleOn : styles.CircleOff}
+                    onClick={toggleCircle3}
                 >
                     <GiPlainCircle className={styles.Dot} />
                     <GiPlainCircle className={styles.Dot} />
