@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import io from "socket.io-client";
+import Chart from "./Chart";
 import styles from "../styles/components/FanComponent.module.scss";
 
 const FanComponent = ({ client, device_id, temperature }) => {
@@ -20,7 +21,7 @@ const FanComponent = ({ client, device_id, temperature }) => {
     return (
         <div className={styles.FanContent}>
             <div className={styles.FanChart}>
-                {/* Miejsce na wykres + test*/}
+                <Chart type={"temperature"} data={[1, 2, 3, 4, 8, 5]} />
             </div>
             <div className={styles.FanInfo}>
                 <div className={styles.FanButton}>
