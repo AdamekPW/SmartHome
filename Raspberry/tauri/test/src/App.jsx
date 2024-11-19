@@ -8,7 +8,6 @@ import Home from "./components/Home";
 import FanComponent from "./components/FanComponent";
 import PlugStripComponent from "./components/PlugStripComponent";
 import LedStripComponent from "./components/LedStripComponent";
-import Chart from "./components/Chart";
 import { w3cwebsocket as W3CWebSocket } from "websocket";
 
 const client = new W3CWebSocket("ws://localhost:8765");
@@ -18,10 +17,6 @@ const App = () => {
     const [selectedModule, setSelectedModule] = useState("home");
     const [buttonState, setButtonState] = useState(false);
     const [temperature, setTemperature] = useState(0);
-
-    const mockTemperatureData = Array.from({ length: 100 }, () =>
-        Math.floor(Math.random() * 30 + 10)
-    );
 
     const handleButtonClick = (newState) => {
         setButtonState(newState);
@@ -77,7 +72,6 @@ const App = () => {
                 onModuleSelect={setSelectedModule}
             />
             {renderModuleComponent()}
-            <Chart data={mockTemperatureData} type="temperature" />
             <ToggleButton onClick={handleButtonClick} />
             <div className={styles.temperature}>
                 <h2>Temperature: {temperature}°C</h2>
