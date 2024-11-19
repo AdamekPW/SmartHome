@@ -3,7 +3,7 @@ import io from "socket.io-client";
 import Chart from "./Chart";
 import styles from "../styles/components/FanComponent.module.scss";
 
-const FanComponent = ({ client, device_id, temperature }) => {
+const FanComponent = ({ client, device_id, temperature, dbTemperature }) => {
     const [isOn, setIsOn] = useState(false);
 
     const handleToggle = () => {
@@ -21,7 +21,7 @@ const FanComponent = ({ client, device_id, temperature }) => {
     return (
         <div className={styles.FanContent}>
             <div className={styles.FanChart}>
-                <Chart type={"temperature"} data={[1, 2, 3, 4, 8, 5]} />
+                <Chart type={"temperature"} data={dbTemperature} />
             </div>
             <div className={styles.FanInfo}>
                 <div className={styles.FanButton}>

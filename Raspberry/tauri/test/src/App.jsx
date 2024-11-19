@@ -14,6 +14,7 @@ const App = () => {
     const [temperature, setTemperature] = useState(0);
     const [plugPower, setPlugPower] = useState(0);
     const [ledStripPower, setLedStripPower] = useState(0);
+    const [dbData, setDbData] = useState([]);
     const clientRef = useRef(null); // Referencja do WebSocket
     const reconnectTimeoutRef = useRef(null); // Referencja do timeouta dla ponownego łączenia
     const url = 'ws://localhost:8765'; // Adres serwera WebSocket
@@ -30,15 +31,19 @@ const App = () => {
 
         client.onmessage = (message) => {
             const data = JSON.parse(message.data);
-            console.log(`${device_id} received data from server: ${data.command.data}°C`);
-            if (data.command.sender_id === "ESP1") {
-                setTemperature(parseFloat(data.command.data.toFixed(2)));
+            console.log(`${device_id} received data from server: ${data.data}`);
+            if (data.sender_id === "server") {
+                setDbData(data.data);
+                console.log(data.data)
             }
-            if (data.command.sender_id === "ESP2") {
-                setPlugPower(parseFloat(data.command.data.toFixed(2)));
+            if (data.sender_id === "ESP1") {
+                setTemperature(parseFloat(data.data.toFixed(2)));
             }
-            if (data.command.sender_id === "ESP3") {
-                setLedStripPower(parseFloat(data.command.data.toFixed(2)));
+            if (data.sender_id === "ESP2") {
+                setPlugPower(parseFloat(data.data.toFixed(2)));
+            }
+            if (data.sender_id === "ESP3") {
+                setLedStripPower(parseFloat(data.data.toFixed(2)));
             }
         };
 
@@ -71,7 +76,7 @@ const App = () => {
             case "home":
                 return <Home />;
             case "fan":
-                return <FanComponent client={clientRef.current} device_id={device_id} temperature={temperature} />;
+                return <FanComponent client={clientRef.current} device_id={device_id} temperature={temperature} dbTemperature={dbData.temperature_samples} />;
             case "plugstrip":
                 return <PlugStripComponent client={clientRef.current} device_id={device_id} plugPower={plugPower} />;
             case "ledstrip":

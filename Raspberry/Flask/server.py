@@ -40,6 +40,23 @@ async def handle_connection(websocket, path):
     sender_id = await websocket.recv()  # Zakładamy, że klient wyśle swój ID zaraz po połączeniu
     connected_devices[sender_id] = websocket
     print(f"Device {sender_id} connected.")
+    
+    if sender_id == "Front":
+        temperature_samples = session.query(Temperature.sample).all()
+        power_led_samples = session.query(PowerLED.sample).all()
+        power_plug_samples = session.query(PowerPlug.sample).all()
+        data_to_send = {
+            "temperature_samples": [sample[0] for sample in temperature_samples],
+            "power_led_samples": [sample[0] for sample in power_led_samples],
+            "power_plug_samples": [sample[0] for sample in power_plug_samples]
+        }
+
+        data = {
+            "sender_id": "server",
+            "target_id": "Front",
+            "data": data_to_send
+        }
+        await websocket.send(json.dumps(data))
 
 
     try:
@@ -59,7 +76,7 @@ async def send_command_to_device(sender_id, command):
     if sender_id in connected_devices:
         try:
             if (command["target_id"] == "Front"):
-                await connected_devices[sender_id].send(json.dumps({"command": command}))
+                await connected_devices[sender_id].send(json.dumps(command))
             else:
                 await connected_devices[sender_id].send(command["data"])
             #print(f"Sent command to {sender_id}: {command}")
