@@ -1,10 +1,13 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useContext } from "react";
 import styles from "./styles/App.module.scss";
 import Navbar from "./components/Navbar";
 import Home from "./components/Home";
 import FanComponent from "./components/FanComponent";
 import PlugStripComponent from "./components/PlugStripComponent";
 import LedStripComponent from "./components/LedStripComponent/LedStripComponent";
+
+import { FanLiveTempContext, initialFanLiveTempContext } from "./contexts/FanLiveTempContext";
+
 import { w3cwebsocket as W3CWebSocket } from "websocket";
 
 const device_id = "Front";
@@ -15,6 +18,7 @@ const App = () => {
     const [plugPower, setPlugPower] = useState(0);
     const [ledStripPower, setLedStripPower] = useState(0);
     const [dbData, setDbData] = useState([]);
+    const [fanLiveTempData, setFanLiveTempData] = useState(initialFanLiveTempContext);
     const clientRef = useRef(null); // Referencja do WebSocket
     const reconnectTimeoutRef = useRef(null); // Referencja do timeouta dla ponownego łączenia
     const url = 'ws://localhost:8765'; // Adres serwera WebSocket
@@ -88,8 +92,10 @@ const App = () => {
 
     return (
         <main>
-            <Navbar selectedModule={selectedModule} onModuleSelect={setSelectedModule} />
-            {renderModuleComponent()}
+            <FanLiveTempContext.Provider value={{ fanLiveTempData, setFanLiveTempData }}>
+                <Navbar selectedModule={selectedModule} onModuleSelect={setSelectedModule} />
+                {renderModuleComponent()}
+            </FanLiveTempContext.Provider>
         </main>
     );
 };

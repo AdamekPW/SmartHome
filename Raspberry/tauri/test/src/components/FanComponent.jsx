@@ -1,14 +1,17 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import styles from "../styles/components/FanComponent.module.scss";
 
 import Chart from "./Chart";
 
+import { FanLiveTempContext } from "../contexts/FanLiveTempContext";
+
 const FanComponent = ({ client, device_id, temperature, dbTemperature }) => {
     const [isOn, setIsOn] = useState(false);
+    const { fanLiveTempData, setFanLiveTempData } = useContext(FanLiveTempContext)
     const [temperatureLiveData, setTemperatureLiveData] = useState([])
 
     useEffect(() => {
-        setTemperatureLiveData(prevState => [...prevState, temperature])
+        setFanLiveTempData(prevState => [...prevState, temperature])
     }, [temperature])
 
     const handleToggle = () => {
@@ -25,7 +28,7 @@ const FanComponent = ({ client, device_id, temperature, dbTemperature }) => {
     return (
         <div className={styles.FanContent}>
             <div className={styles.FanChart}>
-                <Chart type={"temperature"} data={temperatureLiveData} dbData={dbTemperature} />
+                <Chart type={"temperature"} data={fanLiveTempData} dbData={dbTemperature} />
             </div>
             <div className={styles.FanInfo}>
                 <div className={styles.FanButton}>
