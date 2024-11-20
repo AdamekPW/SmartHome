@@ -8,10 +8,10 @@ const FanComponent = ({ client, device_id, temperature }) => {
     const handleToggle = () => {
         const newState = !isOn;
         setIsOn(newState);
-        console.log("Stan przycisku:", newState ? "1" : "1");
+        console.log("Stan przycisku:", newState ? "ON" : "OFF");
         const data = {
             sender_id: device_id,
-            data: newState ? "1" : "0",
+            data: newState ? "ON" : "OFF",
             "target_id": "ESP1"
         };
         client.send(JSON.stringify(data));
