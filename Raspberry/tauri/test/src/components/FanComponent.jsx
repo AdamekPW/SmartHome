@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
-import io from "socket.io-client";
-import Chart from "./Chart";
 import styles from "../styles/components/FanComponent.module.scss";
+
+import Chart from "./Chart";
 
 const FanComponent = ({ client, device_id, temperature, dbTemperature }) => {
     const [isOn, setIsOn] = useState(false);
@@ -9,7 +9,7 @@ const FanComponent = ({ client, device_id, temperature, dbTemperature }) => {
     const handleToggle = () => {
         const newState = !isOn;
         setIsOn(newState);
-        console.log("Stan przycisku:", newState ? "1" : "1");
+        console.log("Stan przycisku:", newState ? "0" : "1");
         const data = {
             sender_id: device_id,
             data: newState ? "1" : "0",

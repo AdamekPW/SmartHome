@@ -3,8 +3,9 @@ import { useEffect, useState } from "react";
 import styles from "../../styles/components/LedStripComponent/LedStripComponent.module.scss";
 
 import LedStripNavbar from "./LedStipNavbar";
+import Chart from "../Chart";
 
-const LedStripComponent = ({ client, device_id, ledStripPower }) => {
+const LedStripComponent = ({ client, device_id, ledStripPower, dbPower }) => {
     const [selectedLedId, setSelectedLedId] = useState(0); // id: 0, mode name: RGB Custom
     const [isOn, setIsOn] = useState(false);
     const [isNavbarOpen, setIsNavbarOpen] = useState(true);
@@ -60,6 +61,7 @@ const LedStripComponent = ({ client, device_id, ledStripPower }) => {
                     {console.log(isMobileViewActive)}
                     <div>
                         <p>{selectedLedId}</p>
+                        <Chart type={"power"} data={dbPower}></Chart>
                     </div>
                     <div className={styles.FanButton}>
                         <button

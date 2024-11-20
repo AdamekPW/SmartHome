@@ -2,7 +2,9 @@ import { useState } from "react";
 import styles from "../styles/components/PlugStripComponent.module.scss";
 import { GiPlainCircle } from "react-icons/gi";
 
-const PlugStripComponent = ({client, device_id, plugPower}) => {
+import Chart from "./Chart";
+
+const PlugStripComponent = ({ client, device_id, plugPower, dbPower }) => {
     const [isOn1, setIsOn1] = useState(false);
     const [isOn2, setIsOn2] = useState(false);
     const [isOn3, setIsOn3] = useState(false);
@@ -45,8 +47,9 @@ const PlugStripComponent = ({client, device_id, plugPower}) => {
     return (
         <div className={styles.PlugContent}>
             <div className={styles.PlugChart}>
-                {plugPower}W
+                <Chart type={"power"} data={dbPower}> </Chart>
             </div>
+                {plugPower}W
 
             <div className={styles.Plug}>
                 <div

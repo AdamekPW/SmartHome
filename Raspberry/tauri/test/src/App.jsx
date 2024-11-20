@@ -78,9 +78,9 @@ const App = () => {
             case "fan":
                 return <FanComponent client={clientRef.current} device_id={device_id} temperature={temperature} dbTemperature={dbData.temperature_samples} />;
             case "plugstrip":
-                return <PlugStripComponent client={clientRef.current} device_id={device_id} plugPower={plugPower} />;
+                return <PlugStripComponent client={clientRef.current} device_id={device_id} plugPower={plugPower} dbPower={dbData.power_plug_samples} />;
             case "ledstrip":
-                return <LedStripComponent client={clientRef.current} device_id={device_id} ledStripPower={ledStripPower} />;
+                return <LedStripComponent client={clientRef.current} device_id={device_id} ledStripPower={ledStripPower} dbPower={dbData.power_led_samples} />;
             default:
                 return "home";
         }
