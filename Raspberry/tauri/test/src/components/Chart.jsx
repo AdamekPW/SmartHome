@@ -1,13 +1,20 @@
 import React from "react";
+import { useState } from "react";
 import { ResponsiveLine } from "@nivo/line";
 
 import styles from "../styles/components/Chart.module.scss";
 
-const Chart = ({ type, data }) => {
+const Chart = ({ type, data, dbData }) => {
+    const [showingSessionData, setShowingSessionData] = useState(true);
+
+    const handleRadioChange = (e) => {
+        setShowingSessionData(e.target.value === "session")
+    }
+
     const chartData = [
         {
-            id: "Temperature",
-            data: data.map((value, index) => ({ x: index, y: value })),
+            id: type,
+            data: (showingSessionData ? data : dbData).map((value, index) => ({ x: index, y: value })),
         },
     ];
 
@@ -16,6 +23,22 @@ const Chart = ({ type, data }) => {
 
     return (
         <div className={styles.container}>
+            <div>
+                <input 
+                    type="radio" 
+                    name="dataType" 
+                    value="session" 
+                    checked={showingSessionData} 
+                    onChange={handleRadioChange}
+                /> Dane z obecnej sesji
+                <input 
+                    type="radio" 
+                    name="dataType" 
+                    value="historical" 
+                    checked={!showingSessionData} 
+                    onChange={handleRadioChange}
+                /> Dane historyczne
+            </div>
             <ResponsiveLine
                 data={chartData}
                 margin={{ top: 20, right: 30, bottom: 50, left: 50 }}

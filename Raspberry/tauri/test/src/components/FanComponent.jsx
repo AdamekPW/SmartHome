@@ -5,11 +5,15 @@ import Chart from "./Chart";
 
 const FanComponent = ({ client, device_id, temperature, dbTemperature }) => {
     const [isOn, setIsOn] = useState(false);
+    const [temperatureLiveData, setTemperatureLiveData] = useState([])
+
+    useEffect(() => {
+        setTemperatureLiveData(prevState => [...prevState, temperature])
+    }, [temperature])
 
     const handleToggle = () => {
         const newState = !isOn;
         setIsOn(newState);
-        console.log("Stan przycisku:", newState ? "0" : "1");
         const data = {
             sender_id: device_id,
             data: newState ? "1" : "0",
@@ -21,7 +25,7 @@ const FanComponent = ({ client, device_id, temperature, dbTemperature }) => {
     return (
         <div className={styles.FanContent}>
             <div className={styles.FanChart}>
-                <Chart type={"temperature"} data={dbTemperature} />
+                <Chart type={"temperature"} data={temperatureLiveData} dbData={dbTemperature} />
             </div>
             <div className={styles.FanInfo}>
                 <div className={styles.FanButton}>
