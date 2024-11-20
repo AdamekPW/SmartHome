@@ -36,7 +36,7 @@ const PlugStripComponent = ({client, device_id, plugPower}) => {
         console.log("Stan przycisku 2:", newState ? "1" : "0");
         const data = {
             sender_id: device_id,
-            data: (isOn1 ? "1" : "0") + "/" + (isOn2 ? "1" : "0") + + "/" + (newState ? "1" : "0"),
+            data: (isOn1 ? "1" : "0") + "/" + (isOn2 ? "1" : "0") + "/" + (newState ? "1" : "0"),
             "target_id": "ESP2"
         };
         client.send(JSON.stringify(data));

@@ -19,6 +19,16 @@ class Temperature(Base):
     sample = Column(Integer)
     created = Column(String, default=lambda: datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"), primary_key=True)
 
+class PowerLED(Base):
+    __tablename__ = 'Power'
+    sample = Column(Integer)
+    created = Column(String, default=lambda: datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"), primary_key=True)
+
+class PowerPlug(Base):
+    __tablename__ = 'PowerPlug'
+    sample = Column(Integer)
+    created = Column(String, default=lambda: datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"), primary_key=True)
+
 # Utworzenie tabeli (jeśli jeszcze nie istnieje)
 Base.metadata.create_all(engine)
 
@@ -90,6 +100,14 @@ async def process_device_data(data):
     elif sender_id == "ESP2" and target_id == "Front":
 
         print(f"Received power data from {sender_id}: {data['data']}W")
+
+        # try:
+        #     new_sample = PowerPlug(sample=data['data'])
+        #     session.add(new_sample)
+        #     session.commit()
+        # except Exception as e:
+        #     print(f"Failed to save power data to database: {e}")
+
         await send_command_to_device(target_id, data)
         print(f"Sent power data to {target_id}: {data['data']}W")
 
@@ -102,6 +120,15 @@ async def process_device_data(data):
     elif sender_id == "ESP3" and target_id == "Front":
 
         print(f"Received power data from {sender_id}: {data['data']}W")
+
+        # try:
+        #     new_sample = PowerLED(sample=data['data'])
+        #     session.add(new_sample)
+        #     session.commit()
+        # except Exception as e:
+        #     print(f"Failed to save power data to database: {e}")
+# 
+
         await send_command_to_device(target_id, data)
         print(f"Sent power data to {target_id}: {data['data']}W")
 
