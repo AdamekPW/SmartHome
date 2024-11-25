@@ -1,15 +1,23 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 
 import styles from "../../styles/components/LedStripComponent/LedStripComponent.module.scss";
 
 import LedStripNavbar from "./LedStipNavbar";
 import Chart from "../Chart";
 
+import { LedStripLivePowerContext } from "../../contexts/LedStripLivePowerContext";
+
 const LedStripComponent = ({ client, device_id, ledStripPower, dbPower }) => {
     const [selectedLedId, setSelectedLedId] = useState(0); // id: 0, mode name: RGB Custom
     const [isOn, setIsOn] = useState(false);
     const [isNavbarOpen, setIsNavbarOpen] = useState(true);
     const [isMobileViewActive, setIsMobileViewActive] = useState(true);
+
+    const { ledLivePowerData, setLedLivePowerData } = useContext(LedStripLivePowerContext)
+
+    useEffect(() => {
+        setLedLivePowerData(prevState => [...prevState, ledStripPower])
+    }, [ledStripPower])
 
     useEffect(() => {
         const mediaQuery = window.matchMedia("(max-width: 32rem)");
@@ -61,7 +69,7 @@ const LedStripComponent = ({ client, device_id, ledStripPower, dbPower }) => {
                     {console.log(isMobileViewActive)}
                     <div>
                         <p>{selectedLedId}</p>
-                        <Chart type={"power"} data={dbPower}></Chart>
+                        <Chart type={"power"} data={ledLivePowerData} dbData={dbPower}></Chart>
                     </div>
                     <div className={styles.FanButton}>
                         <button

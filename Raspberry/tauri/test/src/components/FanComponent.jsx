@@ -8,7 +8,6 @@ import { FanLiveTempContext } from "../contexts/FanLiveTempContext";
 const FanComponent = ({ client, device_id, temperature, dbTemperature }) => {
     const [isOn, setIsOn] = useState(false);
     const { fanLiveTempData, setFanLiveTempData } = useContext(FanLiveTempContext)
-    const [temperatureLiveData, setTemperatureLiveData] = useState([])
 
     useEffect(() => {
         setFanLiveTempData(prevState => [...prevState, temperature])

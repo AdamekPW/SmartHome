@@ -1,13 +1,21 @@
-import { useState } from "react";
+import { useState, useEffect, useContext } from "react";
 import styles from "../styles/components/PlugStripComponent.module.scss";
 import { GiPlainCircle } from "react-icons/gi";
 
 import Chart from "./Chart";
 
+import { PlugStripLivePowerContext } from "../contexts/PlugStripLivePowerContext";
+
 const PlugStripComponent = ({ client, device_id, plugPower, dbPower }) => {
     const [isOn1, setIsOn1] = useState(false);
     const [isOn2, setIsOn2] = useState(false);
     const [isOn3, setIsOn3] = useState(false);
+
+    const { plugLivePowerData, setPlugLivePowerData } = useContext(PlugStripLivePowerContext)
+
+    useEffect(() => {
+        setPlugLivePowerData(prevState => [...prevState, plugPower])
+    }, [plugPower])
 
     const toggleCircle1 = () => {
         const newState = !isOn1;
@@ -32,6 +40,7 @@ const PlugStripComponent = ({ client, device_id, plugPower, dbPower }) => {
         };
         client.send(JSON.stringify(data));
     };
+    
     const toggleCircle3 = () => {
         const newState = !isOn3;
         setIsOn3(newState);
@@ -47,7 +56,7 @@ const PlugStripComponent = ({ client, device_id, plugPower, dbPower }) => {
     return (
         <div className={styles.PlugContent}>
             <div className={styles.PlugChart}>
-                <Chart type={"power"} data={dbPower}> </Chart>
+                <Chart type={"power"} data={plugLivePowerData} dbData={dbPower}> </Chart>
             </div>
                 {plugPower}W
 

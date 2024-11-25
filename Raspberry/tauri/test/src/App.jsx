@@ -7,6 +7,8 @@ import PlugStripComponent from "./components/PlugStripComponent";
 import LedStripComponent from "./components/LedStripComponent/LedStripComponent";
 
 import { FanLiveTempContext, initialFanLiveTempContext } from "./contexts/FanLiveTempContext";
+import { PlugStripLivePowerContext, initialPlugStripLivePowerContext } from "./contexts/PlugStripLivePowerContext";
+import { LedStripLivePowerContext, initialLedStripLivePowerContext } from "./contexts/LedStripLivePowerContext";
 
 import { w3cwebsocket as W3CWebSocket } from "websocket";
 
@@ -19,6 +21,8 @@ const App = () => {
     const [ledStripPower, setLedStripPower] = useState(0);
     const [dbData, setDbData] = useState([]);
     const [fanLiveTempData, setFanLiveTempData] = useState(initialFanLiveTempContext);
+    const [plugLivePowerData, setPlugLivePowerData] = useState(initialPlugStripLivePowerContext);
+    const [ledLivePowerData, setLedLivePowerData] = useState(initialLedStripLivePowerContext);
     const clientRef = useRef(null); // Referencja do WebSocket
     const reconnectTimeoutRef = useRef(null); // Referencja do timeouta dla ponownego łączenia
     const url = 'ws://localhost:8765'; // Adres serwera WebSocket
@@ -93,8 +97,12 @@ const App = () => {
     return (
         <main>
             <FanLiveTempContext.Provider value={{ fanLiveTempData, setFanLiveTempData }}>
-                <Navbar selectedModule={selectedModule} onModuleSelect={setSelectedModule} />
-                {renderModuleComponent()}
+                <PlugStripLivePowerContext.Provider value={{ plugLivePowerData, setPlugLivePowerData }}>
+                    <LedStripLivePowerContext.Provider value={{ ledLivePowerData, setLedLivePowerData }}>
+                        <Navbar selectedModule={selectedModule} onModuleSelect={setSelectedModule} />
+                        {renderModuleComponent()}
+                    </LedStripLivePowerContext.Provider>
+                </PlugStripLivePowerContext.Provider>
             </FanLiveTempContext.Provider>
         </main>
     );
