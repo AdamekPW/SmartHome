@@ -8,13 +8,16 @@ const Chart = ({ type, data, dbData }) => {
     const [showingSessionData, setShowingSessionData] = useState(true);
 
     const handleRadioChange = (e) => {
-        setShowingSessionData(e.target.value === "session")
-    }
+        setShowingSessionData(e.target.value === "session");
+    };
 
     const chartData = [
         {
             id: type,
-            data: (showingSessionData ? data : dbData).map((value, index) => ({ x: index, y: value })),
+            data: (showingSessionData ? data : dbData).map((value, index) => ({
+                x: index,
+                y: value,
+            })),
         },
     ];
 
@@ -24,20 +27,22 @@ const Chart = ({ type, data, dbData }) => {
     return (
         <div className={styles.container}>
             <div>
-                <input 
-                    type="radio" 
-                    name="dataType" 
-                    value="session" 
-                    checked={showingSessionData} 
+                <input
+                    type="radio"
+                    name="dataType"
+                    value="session"
+                    checked={showingSessionData}
                     onChange={handleRadioChange}
-                /> Dane z obecnej sesji
-                <input 
-                    type="radio" 
-                    name="dataType" 
-                    value="historical" 
-                    checked={!showingSessionData} 
+                />{" "}
+                Dane z obecnej sesji
+                <input
+                    type="radio"
+                    name="dataType"
+                    value="historical"
+                    checked={!showingSessionData}
                     onChange={handleRadioChange}
-                /> Dane historyczne
+                />{" "}
+                Dane historyczne
             </div>
             <ResponsiveLine
                 data={chartData}
@@ -60,7 +65,7 @@ const Chart = ({ type, data, dbData }) => {
                     tickPadding: 5,
                     tickRotation: 0,
                 }}
-                colors={{ scheme: "set2" }}
+                colors={{ scheme: "set3" }}
                 lineWidth={2}
                 pointSize={4}
                 pointColor={{ theme: "background" }}

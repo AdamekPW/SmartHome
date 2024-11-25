@@ -13,22 +13,22 @@ const LedStripComponent = ({ client, device_id, ledStripPower, dbPower }) => {
     const [isNavbarOpen, setIsNavbarOpen] = useState(true);
     const [isMobileViewActive, setIsMobileViewActive] = useState(true);
 
-    const { ledLivePowerData, setLedLivePowerData } = useContext(LedStripLivePowerContext)
+    const { ledLivePowerData, setLedLivePowerData } = useContext(
+        LedStripLivePowerContext
+    );
 
     useEffect(() => {
-        setLedLivePowerData(prevState => [...prevState, ledStripPower])
-    }, [ledStripPower])
+        setLedLivePowerData((prevState) => [...prevState, ledStripPower]);
+    }, [ledStripPower]);
 
     useEffect(() => {
         const mediaQuery = window.matchMedia("(max-width: 32rem)");
 
         const handleResize = (e) => {
-            e.matches
-                ? setIsMobileViewActive(true)
-                : setIsMobileViewActive(false);
+            setIsMobileViewActive(e.matches);
         };
 
-        setIsNavbarOpen(true);
+        setIsMobileViewActive(mediaQuery.matches);
 
         mediaQuery.addEventListener("change", handleResize);
 
@@ -69,7 +69,11 @@ const LedStripComponent = ({ client, device_id, ledStripPower, dbPower }) => {
                     {console.log(isMobileViewActive)}
                     <div>
                         <p>{selectedLedId}</p>
-                        <Chart type={"power"} data={ledLivePowerData} dbData={dbPower}></Chart>
+                        <Chart
+                            type={"power"}
+                            data={ledLivePowerData}
+                            dbData={dbPower}
+                        ></Chart>
                     </div>
                     <div className={styles.FanButton}>
                         <button
