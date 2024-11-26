@@ -18,6 +18,7 @@ const App = () => {
     const [selectedModule, setSelectedModule] = useState("home");
     const [temperature, setTemperature] = useState(0);
     const [plugPower, setPlugPower] = useState(0);
+    const [plugButtonInfo, setPlugButtonInfo] = useState(0);
     const [ledStripPower, setLedStripPower] = useState(0);
     const [dbData, setDbData] = useState([]);
     const [fanLiveTempData, setFanLiveTempData] = useState(initialFanLiveTempContext);
@@ -45,13 +46,16 @@ const App = () => {
                 console.log(data.data)
             }
             if (data.sender_id === "ESP1") {
-                setTemperature(parseFloat(data.data.toFixed(2)));
+                setTemperature(parseFloat(data.data).toFixed(2));
             }
             if (data.sender_id === "ESP2") {
-                setPlugPower(parseFloat(data.data.toFixed(2)));
+                const [button1, button2, button3, power] = data.data.split("|");
+                setPlugButtonInfo([button1, button2, button3]);
+                console.log(button1, button2, button3, power);
+                setPlugPower(parseFloat(power).toFixed(2));
             }
             if (data.sender_id === "ESP3") {
-                setLedStripPower(parseFloat(data.data.toFixed(2)));
+                setLedStripPower(parseFloat(data.data).toFixed(2));
             }
         };
 
@@ -86,7 +90,7 @@ const App = () => {
             case "fan":
                 return <FanComponent client={clientRef.current} device_id={device_id} temperature={temperature} dbTemperature={dbData.temperature_samples} />;
             case "plugstrip":
-                return <PlugStripComponent client={clientRef.current} device_id={device_id} plugPower={plugPower} dbPower={dbData.power_plug_samples} />;
+                return <PlugStripComponent client={clientRef.current} device_id={device_id} plugPower={plugPower} plugButtonInfo={plugButtonInfo} dbPower={dbData.power_plug_samples} />;
             case "ledstrip":
                 return <LedStripComponent client={clientRef.current} device_id={device_id} ledStripPower={ledStripPower} dbPower={dbData.power_led_samples} />;
             default:

@@ -6,7 +6,7 @@ import Chart from "./Chart";
 
 import { PlugStripLivePowerContext } from "../contexts/PlugStripLivePowerContext";
 
-const PlugStripComponent = ({ client, device_id, plugPower, dbPower }) => {
+const PlugStripComponent = ({ client, device_id, plugPower, plugButtonInfo, dbPower }) => {
     const [isOn1, setIsOn1] = useState(false);
     const [isOn2, setIsOn2] = useState(false);
     const [isOn3, setIsOn3] = useState(false);
@@ -16,6 +16,15 @@ const PlugStripComponent = ({ client, device_id, plugPower, dbPower }) => {
     useEffect(() => {
         setPlugLivePowerData(prevState => [...prevState, plugPower])
     }, [plugPower])
+
+    useEffect(() => {
+        if (plugButtonInfo[0] === "1") setIsOn1(true);
+        else setIsOn1(false);
+        if (plugButtonInfo[1] === "1") setIsOn2(true);
+        else setIsOn2(false);
+        if (plugButtonInfo[2] === "1") setIsOn3(true);
+        else setIsOn3(false);
+    }, [plugButtonInfo])
 
     const toggleCircle1 = () => {
         const newState = !isOn1;
