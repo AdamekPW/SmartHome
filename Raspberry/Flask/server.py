@@ -79,9 +79,12 @@ async def handle_connection(websocket, path):
         print(f"Connection closed for {sender_id}: {e}")
     finally:
         # Potrzebne w celu naprawienia buga
-        await connected_devices[sender_id].close()
+        try: 
+            await connected_devices[sender_id].close()
+            del connected_devices[sender_id]
+        except Exception as e:
+            pass 
         # Usuń urządzenie po rozłączeniu
-        del connected_devices[sender_id]
         print(f"Device {sender_id} disconnected.")
 
 async def send_command_to_device(sender_id, command):
@@ -99,6 +102,7 @@ async def send_command_to_device(sender_id, command):
         print(f"Device {sender_id} not connected.")
 
 async def process_device_data(data):
+    global ESP1_data, ESP2_data, ESP3_data
     # Weryfikacja, że dane są w prawidłowym formacie
     if "data" not in data:
         print("Invalid data format received.")
