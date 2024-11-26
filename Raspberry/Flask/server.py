@@ -7,6 +7,11 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 import datetime
 
+ESP1_data = ""
+ESP2_data = ""
+ESP3_data = ""
+
+
 # Utworzenie lokalnej bazy danych SQLite
 engine = create_engine('sqlite:///device_data.db')  # Baza danych zostanie utworzona jako plik `device_data.db`
 Base = declarative_base()
@@ -57,6 +62,13 @@ async def handle_connection(websocket, path):
             "data": data_to_send
         }
         await websocket.send(json.dumps(data))
+        
+    if sender_id == "ESP1":
+        await websocket.send(json.dumps(ESP1_data))
+    if sender_id == "ESP2":
+        await websocket.send(json.dumps(ESP2_data))
+    if sender_id == "ESP3":
+        await websocket.send(json.dumps(ESP3_data))
 
 
     try:
@@ -99,6 +111,7 @@ async def process_device_data(data):
 
         print(f"Received button state data from {sender_id}: {data['data']}")
         await send_command_to_device(target_id, data)
+        ESP1_data = data['data']
         print(f"Sent button data to {target_id}: button state: {data['data']}")
         
     elif sender_id == "ESP1" and target_id == "Front":
@@ -132,8 +145,9 @@ async def process_device_data(data):
             
             print(f"Received button state data from {sender_id}: {data['data']}")
             await send_command_to_device(target_id, data)
+            ESP2_data = data['data']
             print(f"Sent button data to {target_id}: button state: {data['data']}")
-    
+
     elif sender_id == "ESP3" and target_id == "Front":
 
         print(f"Received power data from {sender_id}: {data['data']}W")
@@ -153,6 +167,7 @@ async def process_device_data(data):
 
         print(f"Received button state data from {sender_id}: {data['data']}")
         await send_command_to_device(target_id, data)
+        ESP3_data = data['data']
         print(f"Sent button data to {target_id}: button state: {data['data']}")
 
 
