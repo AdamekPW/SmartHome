@@ -64,11 +64,11 @@ async def handle_connection(websocket, path):
         await websocket.send(json.dumps(data))
         
     if sender_id == "ESP1":
-        await websocket.send(json.dumps(ESP1_data))
+        await websocket.send(ESP1_data)
     if sender_id == "ESP2":
-        await websocket.send(json.dumps(ESP2_data))
+        await websocket.send(ESP2_data)
     if sender_id == "ESP3":
-        await websocket.send(json.dumps(ESP3_data))
+        await websocket.send(ESP3_data)
 
 
     try:
