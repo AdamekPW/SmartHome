@@ -48,7 +48,7 @@ const Chart = ({ type, data, dbData }) => {
                 data={chartData}
                 margin={{ top: 20, right: 30, bottom: 50, left: 50 }}
                 xScale={{ type: "linear" }}
-                yScale={{ type: "linear", min: "auto", max: "auto" }}
+                yScale={{ type: "linear" }}
                 axisLeft={{
                     legend: chartLabel,
                     legendOffset: -40,
@@ -90,7 +90,7 @@ const Chart = ({ type, data, dbData }) => {
                     grid: {
                         line: {
                             stroke: "#555",
-                            strokeWidth: 1,
+                            strokeWidth: 0.5,
                         },
                     },
                 }}

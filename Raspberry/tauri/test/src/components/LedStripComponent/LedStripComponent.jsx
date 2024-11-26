@@ -65,15 +65,15 @@ const LedStripComponent = ({ client, device_id, ledStripPower, dbPower }) => {
                 <></>
             ) : (
                 <div>
-                    {console.log(isNavbarOpen)}
-                    {console.log(isMobileViewActive)}
                     <div>
                         <p>{selectedLedId}</p>
-                        <Chart
-                            type={"power"}
-                            data={ledLivePowerData}
-                            dbData={dbPower}
-                        ></Chart>
+                        <div className={styles.ledChart}>
+                            <Chart
+                                type={"power"}
+                                data={ledLivePowerData}
+                                dbData={dbPower}
+                            ></Chart>
+                        </div>
                     </div>
                     <div className={styles.FanButton}>
                         <button
