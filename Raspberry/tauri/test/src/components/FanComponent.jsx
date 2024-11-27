@@ -7,11 +7,18 @@ import { FanLiveTempContext } from "../contexts/FanLiveTempContext";
 
 const FanComponent = ({ client, device_id, temperature, dbTemperature }) => {
     const [isOn, setIsOn] = useState(false);
-    const { fanLiveTempData, setFanLiveTempData } = useContext(FanLiveTempContext)
+    const { fanLiveTempData, setFanLiveTempData } =
+        useContext(FanLiveTempContext);
 
     useEffect(() => {
-        setFanLiveTempData(prevState => [...prevState, temperature])
-    }, [temperature])
+        setFanLiveTempData((prevState) => {
+            const updatedState = [...prevState, temperature];
+            if (updatedState.length > 200) {
+                return updatedState.slice(-200);
+            }
+            return updatedState;
+        });
+    }, [temperature]);
 
     const handleToggle = () => {
         const newState = !isOn;
@@ -19,7 +26,7 @@ const FanComponent = ({ client, device_id, temperature, dbTemperature }) => {
         const data = {
             sender_id: device_id,
             data: newState ? "1" : "0",
-            "target_id": "ESP1"
+            target_id: "ESP1",
         };
         client.send(JSON.stringify(data));
     };
@@ -27,11 +34,15 @@ const FanComponent = ({ client, device_id, temperature, dbTemperature }) => {
     return (
         <div className={styles.FanContent}>
             <div className={styles.FanChart}>
-                <Chart type={"temperature"} data={fanLiveTempData} dbData={dbTemperature} />
+                <Chart
+                    type={"temperature"}
+                    data={fanLiveTempData}
+                    dbData={dbTemperature}
+                />
             </div>
             <div className={styles.FanInfo}>
                 <div className={styles.FanButton}>
-                    <button 
+                    <button
                         onClick={handleToggle}
                         className={isOn ? styles.buttonOn : styles.buttonOff}
                     >

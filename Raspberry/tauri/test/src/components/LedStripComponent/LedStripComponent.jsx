@@ -18,7 +18,13 @@ const LedStripComponent = ({ client, device_id, ledStripPower, dbPower }) => {
     );
 
     useEffect(() => {
-        setLedLivePowerData((prevState) => [...prevState, ledStripPower]);
+        setLedLivePowerData((prevState) => {
+            const updatedState = [...prevState, ledStripPower];
+            if (updatedState.length > 200) {
+                return updatedState.slice(-200);
+            }
+            return updatedState;
+        });
     }, [ledStripPower]);
 
     useEffect(() => {

@@ -26,23 +26,29 @@ const Chart = ({ type, data, dbData }) => {
 
     return (
         <div className={styles.container}>
-            <div>
-                <input
-                    type="radio"
-                    name="dataType"
-                    value="session"
-                    checked={showingSessionData}
-                    onChange={handleRadioChange}
-                />{" "}
-                Dane z obecnej sesji
-                <input
-                    type="radio"
-                    name="dataType"
-                    value="historical"
-                    checked={!showingSessionData}
-                    onChange={handleRadioChange}
-                />{" "}
-                Dane historyczne
+            <div className={styles.labels}>
+                <label>
+                    <input
+                        type="radio"
+                        name="dataType"
+                        value="session"
+                        checked={showingSessionData}
+                        onChange={handleRadioChange}
+                    />
+                    <span></span>
+                    Dane z obecnej sesji
+                </label>
+                <label>
+                    <input
+                        type="radio"
+                        name="dataType"
+                        value="historical"
+                        checked={!showingSessionData}
+                        onChange={handleRadioChange}
+                    />
+                    <span></span>
+                    Dane historyczne
+                </label>
             </div>
             <ResponsiveLine
                 data={chartData}
@@ -69,8 +75,6 @@ const Chart = ({ type, data, dbData }) => {
                 lineWidth={2}
                 pointSize={4}
                 pointColor={{ theme: "background" }}
-                pointBorderWidth={2}
-                pointBorderColor={{ from: "serieColor" }}
                 enableArea={true}
                 areaOpacity={0.2}
                 useMesh={true}
