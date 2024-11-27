@@ -13,7 +13,8 @@
 }
 
 .FanChart {
-    background-color: $medium-grey;
+    border: 2px solid $medium-grey;
+    border-radius: 10px;
     width: 24rem;
     height: 24rem;
 }

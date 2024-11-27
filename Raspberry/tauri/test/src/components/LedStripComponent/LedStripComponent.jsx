@@ -1,25 +1,40 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 
 import styles from "../../styles/components/LedStripComponent/LedStripComponent.module.scss";
 
 import LedStripNavbar from "./LedStipNavbar";
+import Chart from "../Chart";
 
-const LedStripComponent = ({ client, device_id, ledStripPower }) => {
+import { LedStripLivePowerContext } from "../../contexts/LedStripLivePowerContext";
+
+const LedStripComponent = ({ client, device_id, ledStripPower, dbPower }) => {
     const [selectedLedId, setSelectedLedId] = useState(0); // id: 0, mode name: RGB Custom
     const [isOn, setIsOn] = useState(false);
     const [isNavbarOpen, setIsNavbarOpen] = useState(true);
     const [isMobileViewActive, setIsMobileViewActive] = useState(true);
 
+    const { ledLivePowerData, setLedLivePowerData } = useContext(
+        LedStripLivePowerContext
+    );
+
+    useEffect(() => {
+        setLedLivePowerData((prevState) => {
+            const updatedState = [...prevState, ledStripPower];
+            if (updatedState.length > 200) {
+                return updatedState.slice(-200);
+            }
+            return updatedState;
+        });
+    }, [ledStripPower]);
+
     useEffect(() => {
         const mediaQuery = window.matchMedia("(max-width: 32rem)");
 
         const handleResize = (e) => {
-            e.matches
-                ? setIsMobileViewActive(true)
-                : setIsMobileViewActive(false);
+            setIsMobileViewActive(e.matches);
         };
 
-        setIsNavbarOpen(true);
+        setIsMobileViewActive(mediaQuery.matches);
 
         mediaQuery.addEventListener("change", handleResize);
 
@@ -56,10 +71,15 @@ const LedStripComponent = ({ client, device_id, ledStripPower }) => {
                 <></>
             ) : (
                 <div>
-                    {console.log(isNavbarOpen)}
-                    {console.log(isMobileViewActive)}
                     <div>
                         <p>{selectedLedId}</p>
+                        <div className={styles.ledChart}>
+                            <Chart
+                                type={"power"}
+                                data={ledLivePowerData}
+                                dbData={dbPower}
+                            ></Chart>
+                        </div>
                     </div>
                     <div className={styles.FanButton}>
                         <button

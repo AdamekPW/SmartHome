@@ -1,18 +1,32 @@
-import React, { useState, useEffect } from "react";
-import io from "socket.io-client";
+import React, { useState, useEffect, useContext } from "react";
 import styles from "../styles/components/FanComponent.module.scss";
 
-const FanComponent = ({ client, device_id, temperature }) => {
+import Chart from "./Chart";
+
+import { FanLiveTempContext } from "../contexts/FanLiveTempContext";
+
+const FanComponent = ({ client, device_id, temperature, dbTemperature }) => {
     const [isOn, setIsOn] = useState(false);
+    const { fanLiveTempData, setFanLiveTempData } =
+        useContext(FanLiveTempContext);
+
+    useEffect(() => {
+        setFanLiveTempData((prevState) => {
+            const updatedState = [...prevState, temperature];
+            if (updatedState.length > 200) {
+                return updatedState.slice(-200);
+            }
+            return updatedState;
+        });
+    }, [temperature]);
 
     const handleToggle = () => {
         const newState = !isOn;
         setIsOn(newState);
-        console.log("Stan przycisku:", newState ? "ON" : "OFF");
         const data = {
             sender_id: device_id,
-            data: newState ? "ON" : "OFF",
-            "target_id": "ESP1"
+            data: newState ? "1" : "0",
+            target_id: "ESP1",
         };
         client.send(JSON.stringify(data));
     };
@@ -20,11 +34,15 @@ const FanComponent = ({ client, device_id, temperature }) => {
     return (
         <div className={styles.FanContent}>
             <div className={styles.FanChart}>
-                {/* Miejsce na wykres + test*/}
+                <Chart
+                    type={"temperature"}
+                    data={fanLiveTempData}
+                    dbData={dbTemperature}
+                />
             </div>
             <div className={styles.FanInfo}>
                 <div className={styles.FanButton}>
-                    <button 
+                    <button
                         onClick={handleToggle}
                         className={isOn ? styles.buttonOn : styles.buttonOff}
                     >

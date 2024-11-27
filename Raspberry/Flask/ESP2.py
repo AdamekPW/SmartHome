@@ -22,9 +22,14 @@ async def send_power_data(websocket, device_id):
     while True:
         # Generowanie losowej temperatury
         power = round(random.uniform(20.0, 25.0), 2)
+        button = random.randint(0, 1)
+        button2 = random.randint(0, 1)
+        button3 = random.randint(0, 1)
+        data = ""
+        data = data + str(button) + "|" + str(button2) + "|" + str(button3) + "|" + str(power)
         data = {
             "sender_id": device_id,
-            "data": power,
+            "data": data,
             "target_id": "Front"
         }
         # Wysyłamy dane do serwera

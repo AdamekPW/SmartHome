@@ -11,6 +11,7 @@ const LedStripNavbar = ({
     onOpenNavbar,
 }) => {
     const toggleMenu = () => {
+        if (!isMobileViewActive) return;
         onOpenNavbar((prevState) => !prevState);
     };
 
@@ -45,14 +46,13 @@ const LedStripNavbar = ({
     return (
         <div
             className={`${styles.container} ${
-                isNavbarOpen ? styles.active : <></>
+                isNavbarOpen || !isMobileViewActive ? styles.active : <></>
             }`}
         >
-            {/* <p>Pokaż wykres</p> */}
             <button className={styles.hamburger} onClick={toggleMenu}>
                 ☰
             </button>
-            {isNavbarOpen ? displayLedOptions() : <></>}
+            {isNavbarOpen || !isMobileViewActive ? displayLedOptions() : <></>}
         </div>
     );
 };

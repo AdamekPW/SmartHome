@@ -5,6 +5,13 @@
     align-items: center;
 }
 
+.ledChart {
+    border: 2px solid $medium-grey;
+    border-radius: 10px;
+    width: 24rem;
+    height: 24rem;
+}
+
 .buttonOff, .buttonOn {
     margin-top: 2rem;
     background-color: $light-grey;
