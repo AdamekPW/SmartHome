@@ -63,10 +63,19 @@
 
 @media (max-width: 32rem) {
     .FanContent {
-        height: calc(100vh - 4rem);
-        width: 80vw;
+        height: auto;
+        width: 90%;
         flex-direction: column;
-        justify-content: space-around;
+        margin: 2rem auto;
+        align-items: center;
+    }
+    .FanChart {
+        width: 90%;
+        padding: 1rem 0.5rem 5rem; //temporary (or not?)
+        margin: 1rem;
+        border-radius: 10px;
+        max-width: 100%;
+        overflow: hidden;
     }
     .FanInfo {
         display: flex;

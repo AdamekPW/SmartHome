@@ -80,56 +80,47 @@
 
 @media (max-width: 32rem) {
     .PlugContent {
-        height: calc(100vh - 4rem);
-        width: 80vw;
-        flex-direction: column;
-    }
-    .Plug{
-        display: flex;
-        background-color: $medium-grey;
+        height: auto;
         width: 90%;
-        justify-content: space-around;
-        flex-direction: row;
-        height: fit-content;
-        padding: 0.5em 0.5em;
-        border-radius: 10px;
+        flex-direction: column;
+        margin: 2rem auto;
         align-items: center;
-        margin-bottom: 5%;
-        margin-top: 5%;
     }
-    .CircleOn{
-        background-color: $light-grey;
-        border-radius: 50%;
-        height: 66%;
-        aspect-ratio: 1 / 1;
-        border: 5px solid $green;
-        margin: 0.5em;
-        flex-direction: column;
-    }
-    .CircleOff{
-        background-color: $light-grey;
-        border-radius: 50%;
-        height: 66%;
-        aspect-ratio: 1 / 1;
-        border: 5px solid $red;
-        margin: 0.5em;
-        flex-direction: column;
-    }
-    .Dot {
-        font-size: 1.25em;
-        color: black;
-        margin: 10px 0;
-    }
-    .Dot:first-of-type {
-        margin-right: 0%;
-    }
-    
-    .Dot:last-of-type {
-        margin-left: 0%;
-    }
+
     .PlugChart {
-        margin-top: 10px;
-        width: 24rem;
-        height: 20rem;
+        width: 90%;
+        padding: 1rem 0.5rem;
+        margin-bottom: 1rem;
+        border-radius: 10px;
+        overflow: hidden;
+    }
+
+    .ButtonsWithSample {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 100%;
+    }
+
+    .Plug {
+        width: 100%;
+        max-width: 20rem;
+        flex-direction: row;
+    }
+
+    .CircleOn,
+    .CircleOff {
+        width: 4rem;
+        height: 4rem;
+        border: 5px solid $green;
+    }
+
+    .CircleOff {
+        border-color: $red;
+    }
+
+    .Dot {
+        font-size: 1rem;
+        color: black;
     }
 }

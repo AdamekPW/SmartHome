@@ -39,3 +39,10 @@ input[type="radio"]:checked + span {
     background-color: $medium-grey;
     border-color: $green;
 }
+
+@media (max-width: 32rem) {
+    .container {
+        height: 22rem;
+        width: 100%;
+    }
+}
