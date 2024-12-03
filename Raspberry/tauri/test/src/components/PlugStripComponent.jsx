@@ -56,20 +56,41 @@ const PlugStripComponent = ({
                 </Chart>
             </div>
             <div className={styles.ButtonsWithSample}>
-                <div className={styles.Plug}>
-                    {buttonStates.map((isOn, index) => (
-                        <div
-                            key={index}
-                            className={
-                                isOn ? styles.CircleOn : styles.CircleOff
-                            }
-                            onClick={() => toggleCircle(index)}
-                        >
+            <div className={styles.Plug}>
+                <div
+                    className={isOn1 ? styles.CircleOn : styles.CircleOff}
+                    onClick={toggleCircle1}
+                >
+                    <div className={styles.DotsContainer}>
+                        <GiPlainCircle className={styles.Dot} />
+                        <BiSolidCircleHalf className={`${styles.Icon} ${styles.CenterIcon}`} />
+                        <GiPlainCircle className={styles.Dot} />
+                    </div>
+                    </div>
+        
+                    <div
+                        className={isOn2 ? styles.CircleOn : styles.CircleOff}
+                        onClick={toggleCircle2}
+                    >
+                        <div className={styles.DotsContainer}>
                             <GiPlainCircle className={styles.Dot} />
+                            <BiSolidCircleHalf className={`${styles.Icon} ${styles.CenterIcon}`} />
                             <GiPlainCircle className={styles.Dot} />
                         </div>
-                    ))}
+                    </div>
+        
+                    <div
+                        className={isOn3 ? styles.CircleOn : styles.CircleOff}
+                        onClick={toggleCircle3}
+                    >
+                        <div className={styles.DotsContainer}>
+                            <GiPlainCircle className={styles.Dot} />
+                            <BiSolidCircleHalf className={`${styles.Icon} ${styles.CenterIcon}`} />
+                            <GiPlainCircle className={styles.Dot} />
+                        </div>
+                    </div>
                 </div>
+
                 <div className={styles.CurrentPowerSample}>{plugPower}W</div>
             </div>
         </div>
