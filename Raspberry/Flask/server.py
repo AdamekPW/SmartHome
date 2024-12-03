@@ -8,7 +8,7 @@ from sqlalchemy.orm import sessionmaker
 import datetime
 
 ESP1_data = ""
-ESP2_data = ""
+ESP2_data = "0|0|0"
 ESP3_data = ""
 
 
@@ -134,7 +134,12 @@ async def process_device_data(data):
     elif sender_id == "ESP2" and target_id == "Front":
 
         print(f"Received power data from {sender_id}: {data['data']}W")
+        parts = data['data'].rsplit('|', 1)  
+        buttons_info = parts[0]  
+        power_info = parts[1]  
 
+        if (float(power_info) != -1.0):
+            data['data'] = ESP2_data+'|'+power_info
         # try:
         #     new_sample = PowerPlug(sample=data['data'])
         #     session.add(new_sample)
