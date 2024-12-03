@@ -50,9 +50,12 @@ const App = () => {
             }
             if (data.sender_id === "ESP2") {
                 const [button1, button2, button3, power] = data.data.split("|");
-                setPlugButtonInfo([button1, button2, button3]);
+                if (parseFloat(power) === -1){
+                    setPlugButtonInfo([button1, button2, button3]);
+                } else {
+                    setPlugPower(parseFloat(power).toFixed(2));
+                }
                 console.log(button1, button2, button3, power);
-                setPlugPower(parseFloat(power).toFixed(2));
             }
             if (data.sender_id === "ESP3") {
                 setLedStripPower(parseFloat(data.data).toFixed(2));
