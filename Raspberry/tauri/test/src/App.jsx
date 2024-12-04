@@ -55,7 +55,7 @@ const App = () => {
                 } else {
                     setPlugPower(parseFloat(power).toFixed(2));
                 }
-                console.log(button1, button2, button3, power);
+                // console.log(button1, button2, button3, power);
             }
             if (data.sender_id === "ESP3") {
                 setLedStripPower(parseFloat(data.data).toFixed(2));

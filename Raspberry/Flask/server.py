@@ -25,7 +25,7 @@ class Temperature(Base):
     created = Column(String, default=lambda: datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"), primary_key=True)
 
 class PowerLED(Base):
-    __tablename__ = 'Power'
+    __tablename__ = 'PowerLED'
     sample = Column(Integer)
     created = Column(String, default=lambda: datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"), primary_key=True)
 
@@ -50,6 +50,11 @@ async def handle_connection(websocket, path):
         temperature_samples = session.query(Temperature.sample).all()
         power_led_samples = session.query(PowerLED.sample).all()
         power_plug_samples = session.query(PowerPlug.sample).all()
+        current_month = datetime.datetime.now().strftime("%Y-%m")
+        temperature_samples = session.query(Temperature.sample).filter(Temperature.created.like(f"{current_month}%")).all()
+        power_led_samples = session.query(PowerLED.sample).filter(PowerLED.created.like(f"{current_month}%")).all()
+        power_plug_samples = session.query(PowerPlug.sample).filter(PowerPlug.created.like(f"{current_month}%")).all()
+        
         data_to_send = {
             "temperature_samples": [sample[0] for sample in temperature_samples],
             "power_led_samples": [sample[0] for sample in power_led_samples],
@@ -136,12 +141,13 @@ async def process_device_data(data):
         print(f"Received power data from {sender_id}: {data['data']}W")
         parts = data['data'].rsplit('|', 1)  
         buttons_info = parts[0]  
-        power_info = parts[1]  
+        power_info = parts[1]
+
 
         if (float(power_info) != -1.0):
             data['data'] = ESP2_data+'|'+power_info
         # try:
-        #     new_sample = PowerPlug(sample=data['data'])
+        #     new_sample = PowerPlug(sample=power_info)
         #     session.add(new_sample)
         #     session.commit()
         # except Exception as e:
@@ -167,7 +173,7 @@ async def process_device_data(data):
         #     session.commit()
         # except Exception as e:
         #     print(f"Failed to save power data to database: {e}")
-# 
+
 
         await send_command_to_device(target_id, data)
         print(f"Sent power data to {target_id}: {data['data']}W")

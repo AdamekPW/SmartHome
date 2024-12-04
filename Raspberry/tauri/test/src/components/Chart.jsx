@@ -8,6 +8,10 @@ const Chart = ({ type, data, dbData }) => {
     const [showingSessionData, setShowingSessionData] = useState(true);
 
     const handleRadioChange = (e) => {
+        if (e.target.value === "historical" && dbData.length === 0) {
+            console.log("brak danych do wyswietlenia")
+            return;
+        }
         setShowingSessionData(e.target.value === "session");
     };
 
