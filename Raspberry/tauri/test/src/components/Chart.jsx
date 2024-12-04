@@ -1,15 +1,22 @@
-import React from "react";
+import React, { useMemo } from "react";
 import { useState } from "react";
 import { ResponsiveLine } from "@nivo/line";
 
 import styles from "../styles/components/Chart.module.scss";
+
+const calculateAverage = (data) => {
+    const filteredData = data.filter(value => value !== 0);
+    if (filteredData.length === 0) return 0;
+    const sum = filteredData.reduce((acc, value) => acc + parseFloat(value, 10), 0);
+    return (sum / filteredData.length).toFixed(2);
+};
 
 const Chart = ({ type, data, dbData }) => {
     const [showingSessionData, setShowingSessionData] = useState(true);
 
     const handleRadioChange = (e) => {
         if (e.target.value === "historical" && dbData.length === 0) {
-            console.log("brak danych do wyswietlenia")
+            console.log("brak danych do wyswietlenia");
             return;
         }
         setShowingSessionData(e.target.value === "session");
@@ -27,6 +34,11 @@ const Chart = ({ type, data, dbData }) => {
 
     const chartLabel =
         type === "temperature" ? "Temperatura (°C)" : "Zużycie prądu (kWh)";
+
+    const average = useMemo(() => {
+        return showingSessionData ? calculateAverage(data) : calculateAverage(dbData);
+    }, [showingSessionData, data, dbData]);
+    console.log(data, dbData)
 
     return (
         <div className={styles.container}>
@@ -53,6 +65,9 @@ const Chart = ({ type, data, dbData }) => {
                     <span></span>
                     Dane historyczne
                 </label>
+            </div>
+            <div className={styles.average}>
+                Średnia: {average} {type === "temperature" ? "°C" : "kWh"}
             </div>
             <ResponsiveLine
                 data={chartData}
