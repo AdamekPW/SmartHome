@@ -1,0 +1,93 @@
+@use "../../vars" as *;
+
+.container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+}
+
+.section {
+    border-radius: 8px;
+    color: #fff;
+    width: 20em;
+    padding: 1rem;
+
+    &.brightness {
+        background-color: #ffbe00;
+    }
+
+    &.delay {
+        background-color: #4caf50;
+    }
+
+    &.mode {
+        background-color: #2196f3;
+    }
+
+    label {
+        display: block;
+        margin-bottom: 0.5rem;
+        font-weight: bold;
+    }
+
+    input,
+    select {
+        width: 95%;
+        padding: 0.5rem;
+        border: none;
+        border-radius: 5px;
+        outline: none;
+        margin-top: 0.5rem;
+    }
+
+    input[type="range"] {
+        -webkit-appearance: none;
+        appearance: none;
+        height: 0.5rem;
+        background: #ddd;
+        border-radius: 4px;
+        margin-top: 1rem;
+
+        &::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 1rem;
+            height: 1rem;
+            border-radius: 50%;
+            background: #000;
+            cursor: pointer;
+        }
+    }
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.expandButton {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: $background;
+    color: white;
+    border: none;
+    padding: 0.5rem;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1.2rem;
+    transition: background-color 0.3s;
+
+    &:hover {
+        background-color: $navbar-background;
+    }
+}
+
+@media (max-width: 32rem) {
+    .section {
+        width: 80vw;
+    }
+}

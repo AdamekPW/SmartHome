@@ -5,15 +5,9 @@
     align-items: center;
 }
 
-.ledChart {
-    border: 2px solid $medium-grey;
-    border-radius: 10px;
-    width: 24rem;
-    height: 24rem;
-}
-
-.buttonOff, .buttonOn {
-    margin-top: 2rem;
+.buttonOff,
+.buttonOn {
+    margin-top: 1rem;
     background-color: $light-grey;
     border-radius: 10px;
     border: 6px solid $red;
@@ -25,15 +19,27 @@
     cursor: pointer;
 }
 
-.buttonOn{
+.buttonOn {
     border: 6px solid $green;
+}
+
+.confirmChanges {
+    padding: 0.5rem 1rem;
+    margin: 0.5rem 0;
+    background-color: $light-grey;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: 0.2s;
+
+    &:hover {
+        background-color: $navbar-background;
+        color: white;
+    }
 }
 
 @media (max-width: 32rem) {
     .container {
-        height: calc(100vh - 4em); 
+        height: calc(100vh - 4em);
     }
-
 }
-
-
