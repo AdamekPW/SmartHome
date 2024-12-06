@@ -6,6 +6,7 @@ import { ledOptions } from "./ledOptions";
 const LedStripNavbar = ({
     selectedLedId,
     onSelectLedId,
+    onSelectPrevioudLedId,
     isMobileViewActive,
     isNavbarOpen,
     onOpenNavbar,
@@ -19,7 +20,7 @@ const LedStripNavbar = ({
         return ledOptions.map((option) => {
             return (
                 <div className={styles.optionWithLine} key={option.id}>
-                    {option.id === 0 ? (
+                    {option.id === 1 ? (
                         <></>
                     ) : (
                         <hr className={styles.line}></hr>
@@ -33,6 +34,7 @@ const LedStripNavbar = ({
                             className={styles.ledOption}
                             onClick={() => {
                                 onSelectLedId(option.id);
+                                onSelectPrevioudLedId(option.id);
                                 isMobileViewActive ? toggleMenu() : null;
                             }}
                         >

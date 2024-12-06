@@ -1,38 +1,30 @@
 export const ledOptions = [
     {
-        id: 0,
-        name: "RGB Custom",
-    },
-    {
         id: 1,
-        name: "Rainbow",
+        name: "FadeInOut",
     },
     {
         id: 2,
-        name: "Rotate Loop",
+        name: "Rainbow",
     },
     {
         id: 3,
-        name: "Fun Random Change",
+        name: "StandardAnimation",
     },
     {
         id: 4,
-        name: "Gamma",
+        name: "Cyclon",
     },
     {
         id: 5,
-        name: "Fun Loop",
+        name: "FunLoop",
     },
     {
         id: 6,
-        name: "Fade in-out",
+        name: "RandomChange",
     },
     {
         id: 7,
-        name: "Cylon",
-    },
-    {
-        id: 8,
-        name: "Animation",
+        name: "SimpleColor",
     },
 ];
