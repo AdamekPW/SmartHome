@@ -1,6 +1,7 @@
 import React, { useMemo } from "react";
 import { useState } from "react";
 import { ResponsiveLine } from "@nivo/line";
+import { ResponsiveBar } from "@nivo/bar";
 
 import styles from "../styles/components/Chart.module.scss";
 
@@ -22,15 +23,19 @@ const Chart = ({ type, data, dbData }) => {
         setShowingSessionData(e.target.value === "session");
     };
 
-    const chartData = [
-        {
-            id: type,
-            data: (showingSessionData ? data : dbData).map((value, index) => ({
-                x: index,
-                y: value,
-            })),
-        },
-    ];
+    const chartData = useMemo(() => {
+        return (showingSessionData ? data : dbData).map((value, index) => ({
+            x: index + 1,
+            y: value,
+        }));
+    }, [showingSessionData, data, dbData]);
+
+    const barData = useMemo(() => {
+        return dbData.map((value, index) => ({
+            index: `${index + 1}`,
+            value,
+        }));
+    }, [dbData]);
 
     const chartLabel =
         type === "temperature" ? "Temperatura (°C)" : "Zużycie prądu (kWh)";
@@ -38,7 +43,6 @@ const Chart = ({ type, data, dbData }) => {
     const average = useMemo(() => {
         return showingSessionData ? calculateAverage(data) : calculateAverage(dbData);
     }, [showingSessionData, data, dbData]);
-    console.log(data, dbData)
 
     return (
         <div className={styles.container}>
@@ -69,55 +73,109 @@ const Chart = ({ type, data, dbData }) => {
             <div className={styles.average}>
                 Średnia: {average} {type === "temperature" ? "°C" : "kWh"}
             </div>
-            <ResponsiveLine
-                data={chartData}
-                margin={{ top: 20, right: 30, bottom: 50, left: 50 }}
-                xScale={{ type: "linear" }}
-                yScale={{ type: "linear" }}
-                axisLeft={{
-                    legend: chartLabel,
-                    legendOffset: -40,
-                    legendPosition: "middle",
-                    tickSize: 5,
-                    tickPadding: 5,
-                    tickRotation: 0,
-                }}
-                axisBottom={{
-                    legend: "Odczyt",
-                    legendOffset: 36,
-                    legendPosition: "middle",
-                    tickSize: 5,
-                    tickPadding: 5,
-                    tickRotation: 0,
-                }}
-                colors={{ scheme: "set3" }}
-                lineWidth={2}
-                pointSize={4}
-                pointColor={{ theme: "background" }}
-                enableArea={true}
-                areaOpacity={0.2}
-                useMesh={true}
-                theme={{
-                    axis: {
-                        ticks: {
-                            text: {
-                                fill: "#ddd",
+            {showingSessionData ? (
+                <ResponsiveLine
+                    data={[
+                        {
+                            id: type,
+                            data: chartData,
+                        },
+                    ]}
+                    margin={{ top: 20, right: 30, bottom: 50, left: 50 }}
+                    xScale={{ type: "linear" }}
+                    yScale={{ type: "linear" }}
+                    axisLeft={{
+                        legend: chartLabel,
+                        legendOffset: -40,
+                        legendPosition: "middle",
+                        tickSize: 5,
+                        tickPadding: 5,
+                        tickRotation: 0,
+                    }}
+                    axisBottom={{
+                        legend: "Odczyt",
+                        legendOffset: 36,
+                        legendPosition: "middle",
+                        tickSize: 5,
+                        tickPadding: 5,
+                        tickRotation: 0,
+                    }}
+                    colors={{ scheme: "set3" }}
+                    lineWidth={2}
+                    pointSize={4}
+                    pointColor={{ theme: "background" }}
+                    enableArea={true}
+                    areaOpacity={0.2}
+                    useMesh={true}
+                    theme={{
+                        axis: {
+                            ticks: {
+                                text: {
+                                    fill: "#ddd",
+                                },
+                            },
+                            legend: {
+                                text: {
+                                    fill: "#ddd",
+                                },
                             },
                         },
-                        legend: {
-                            text: {
-                                fill: "#ddd",
+                        grid: {
+                            line: {
+                                stroke: "#555",
+                                strokeWidth: 0.5,
                             },
                         },
-                    },
-                    grid: {
-                        line: {
-                            stroke: "#555",
-                            strokeWidth: 0.5,
+                    }}
+                />
+            ) : (
+                <ResponsiveBar
+                    data={barData}
+                    keys={["value"]}
+                    indexBy="index"
+                    margin={{ top: 20, right: 30, bottom: 50, left: 50 }}
+                    padding={0.3}
+                    colors={{ scheme: "set3" }}
+                    labelTextColor="transparent"
+                    axisLeft={{
+                        legend: chartLabel,
+                        legendOffset: -40,
+                        legendPosition: "middle",
+                        tickSize: 5,
+                        tickPadding: 5,
+                        tickRotation: 0,
+                    }}
+                    axisBottom={{
+                        legend: "Dzień",
+                        legendOffset: 36,
+                        legendPosition: "middle",
+                        tickSize: 5,
+                        tickPadding: 5,
+                        tickRotation: 90,
+
+                    }}
+                    theme={{
+                        axis: {
+                            ticks: {
+                                text: {
+                                    fill: "#ddd",
+                                },
+                            },
+                            legend: {
+                                text: {
+                                    fill: "#ddd",
+                                },
+                            },
                         },
-                    },
-                }}
-            />
+                        grid: {
+                            line: {
+                                stroke: "#555",
+                                strokeWidth: 0.5,
+                            },
+                        },
+                    }}
+                />
+            )}
         </div>
     );
 };

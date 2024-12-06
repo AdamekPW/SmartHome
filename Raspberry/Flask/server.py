@@ -2,7 +2,7 @@ import asyncio
 import websockets
 import json
 
-from sqlalchemy import create_engine, Column, Integer, String
+from sqlalchemy import create_engine, Column, Integer, String, func
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 import datetime
@@ -47,20 +47,60 @@ async def handle_connection(websocket, path):
     print(f"Device {sender_id} connected.")
     
     if sender_id == "Front":
-        temperature_samples = session.query(Temperature.sample).all()
-        power_led_samples = session.query(PowerLED.sample).all()
-        power_plug_samples = session.query(PowerPlug.sample).all()
         current_month = datetime.datetime.now().strftime("%Y-%m")
-        temperature_samples = session.query(Temperature.sample).filter(Temperature.created.like(f"{current_month}%")).all()
-        power_led_samples = session.query(PowerLED.sample).filter(PowerLED.created.like(f"{current_month}%")).all()
-        power_plug_samples = session.query(PowerPlug.sample).filter(PowerPlug.created.like(f"{current_month}%")).all()
-        
-        data_to_send = {
-            "temperature_samples": [sample[0] for sample in temperature_samples],
-            "power_led_samples": [sample[0] for sample in power_led_samples],
-            "power_plug_samples": [sample[0] for sample in power_plug_samples]
-        }
 
+        temperature_daily_avg = (
+            session.query(
+                func.date(Temperature.created).label("day"),
+                func.avg(Temperature.sample).label("average")
+            )
+            .filter(Temperature.created.like(f"{current_month}%"))
+            .group_by(func.date(Temperature.created))
+            .all()
+        )
+
+        power_led_daily_avg = (
+            session.query(
+                func.date(PowerLED.created).label("day"),
+                func.avg(PowerLED.sample).label("average")
+            )
+            .filter(PowerLED.created.like(f"{current_month}%"))
+            .group_by(func.date(PowerLED.created))
+            .all()
+        )
+
+        power_plug_daily_avg = (
+            session.query(
+                func.date(PowerPlug.created).label("day"),
+                func.avg(PowerPlug.sample).label("average")
+            )
+            .filter(PowerPlug.created.like(f"{current_month}%"))
+            .group_by(func.date(PowerPlug.created))
+            .all()
+        )
+        
+        days_in_month = 31
+        
+        temperature_avg_by_day = [0] * days_in_month
+        for day, avg in temperature_daily_avg:
+            day_index = int(day.split('-')[-1]) - 1
+            temperature_avg_by_day[day_index] = avg
+
+        power_led_avg_by_day = [0] * days_in_month
+        for day, avg in power_led_daily_avg:
+            day_index = int(day.split('-')[-1]) - 1
+            power_led_avg_by_day[day_index] = avg
+
+        power_plug_avg_by_day = [0] * days_in_month
+        for day, avg in power_plug_daily_avg:
+            day_index = int(day.split('-')[-1]) - 1
+            power_plug_avg_by_day[day_index] = avg
+
+        data_to_send = {
+            "temperature_samples": temperature_avg_by_day,
+            "power_led_samples": power_led_avg_by_day,
+            "power_plug_samples":  power_plug_avg_by_day
+        }
         data = {
             "sender_id": "server",
             "target_id": "Front",

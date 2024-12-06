@@ -10,6 +10,7 @@
     "tauri": "tauri"
   },
   "dependencies": {
+    "@nivo/bar": "^0.88.0",
     "@nivo/core": "^0.88.0",
     "@tauri-apps/api": "^2",
     "@tauri-apps/plugin-shell": "^2",
