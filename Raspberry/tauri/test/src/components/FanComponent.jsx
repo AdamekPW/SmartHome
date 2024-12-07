@@ -6,7 +6,11 @@ import Chart from "./Chart";
 import { FanLiveTempContext } from "../contexts/FanLiveTempContext";
 
 const FanComponent = ({ client, device_id, temperature, dbTemperature }) => {
-    const [isOn, setIsOn] = useState(false);
+    const [isOn, setIsOn] = useState(() => {
+        const savedState = localStorage.getItem("fanState");
+        return savedState !== null ? JSON.parse(savedState) : false;
+    });
+    
     const { fanLiveTempData, setFanLiveTempData } =
         useContext(FanLiveTempContext);
 
@@ -22,6 +26,7 @@ const FanComponent = ({ client, device_id, temperature, dbTemperature }) => {
 
     const handleToggle = () => {
         const newState = !isOn;
+        localStorage.setItem("fanState", newState);
         setIsOn(newState);
         const data = {
             sender_id: device_id,

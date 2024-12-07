@@ -13,9 +13,18 @@ const PlugStripComponent = ({
     plugButtonInfo,
     dbPower,
 }) => {
-    const [isOn1, setIsOn1] = useState(false);
-    const [isOn2, setIsOn2] = useState(false);
-    const [isOn3, setIsOn3] = useState(false);
+    const [isOn1, setIsOn1] = useState(() => {
+        const savedState = localStorage.getItem("plugState1");
+        return savedState !== null ? JSON.parse(savedState) : false;
+    });
+    const [isOn2, setIsOn2] = useState(() => {
+        const savedState = localStorage.getItem("plugState2");
+        return savedState !== null ? JSON.parse(savedState) : false;
+    });
+    const [isOn3, setIsOn3] = useState(() => {
+        const savedState = localStorage.getItem("plugState3");
+        return savedState !== null ? JSON.parse(savedState) : false;
+    });
 
     const { plugLivePowerData, setPlugLivePowerData } = useContext(
         PlugStripLivePowerContext
@@ -38,10 +47,14 @@ const PlugStripComponent = ({
         else setIsOn2(false);
         if (plugButtonInfo[2] === "1") setIsOn3(true);
         else setIsOn3(false);
+        localStorage.setItem("plugState1", plugButtonInfo[0] === "1");
+        localStorage.setItem("plugState2", plugButtonInfo[1] === "1");
+        localStorage.setItem("plugState3", plugButtonInfo[2] === "1");
     }, [plugButtonInfo]);
 
     const toggleCircle1 = () => {
         const newState = !isOn1;
+        localStorage.setItem("plugState1", newState);
         setIsOn1(newState);
         console.log("Stan przycisku 1:", newState ? "1" : "0");
         const data = {
@@ -59,6 +72,7 @@ const PlugStripComponent = ({
 
     const toggleCircle2 = () => {
         const newState = !isOn2;
+        localStorage.setItem("plugState2", newState);
         setIsOn2(newState);
         console.log("Stan przycisku 2:", newState ? "1" : "0");
         const data = {
@@ -76,6 +90,7 @@ const PlugStripComponent = ({
 
     const toggleCircle3 = () => {
         const newState = !isOn3;
+        localStorage.setItem("plugState3", newState);
         setIsOn3(newState);
         console.log("Stan przycisku 2:", newState ? "1" : "0");
         const data = {

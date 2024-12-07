@@ -185,7 +185,7 @@ async def process_device_data(data):
 
 
         if (float(power_info) != -1.0):
-            data['data'] = ESP2_data+'|'+power_info
+            data['data'] = buttons_info+'|'+power_info
         # try:
         #     new_sample = PowerPlug(sample=power_info)
         #     session.add(new_sample)

@@ -15,8 +15,10 @@ const LedStripComponent = ({ client, device_id, ledStripPower }) => {
     const [isNavbarOpen, setIsNavbarOpen] = useState(true);
     const [isMobileViewActive, setIsMobileViewActive] = useState(true);
     const [ledParameters, setLedParameters] = useState("");
-    const [isOn, setIsOn] = useState(true);
-
+    const [isOn, setIsOn] = useState(() => {
+        const savedState = localStorage.getItem("ledState");
+        return savedState !== null ? JSON.parse(savedState) : false;
+    });
     const { ledLivePowerData, setLedLivePowerData } = useContext(
         LedStripLivePowerContext
     );
@@ -62,6 +64,7 @@ const LedStripComponent = ({ client, device_id, ledStripPower }) => {
         }
         console.log(selectedLedId);
         setIsOn((prev) => !prev);
+        localStorage.setItem("ledState", !isOn);
         const data = {
             sender_id: device_id,
             data: "0||",
