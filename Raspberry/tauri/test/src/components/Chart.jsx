@@ -12,7 +12,7 @@ const calculateAverage = (data) => {
     return (sum / filteredData.length).toFixed(2);
 };
 
-const Chart = ({ type, data, dbData }) => {
+const Chart = ({ type, data = [], dbData = []}) => {
     const [showingSessionData, setShowingSessionData] = useState(true);
 
     const handleRadioChange = (e) => {
