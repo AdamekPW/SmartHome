@@ -5,6 +5,12 @@
     align-items: center;
 }
 
+.containerRight {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
 .buttonOff,
 .buttonOn {
     margin-top: 1rem;
@@ -24,11 +30,13 @@
 }
 
 .confirmChanges {
-    padding: 0.5rem 1rem;
+    padding: 0.75rem 2rem;
+    width: 100%;
     margin: 0.5rem 0;
+    font-weight: bold;
     background-color: $light-grey;
-    border: none;
-    border-radius: 4px;
+    border: 6px solid $navbar-background;
+    border-radius: 6px;
     cursor: pointer;
     transition: 0.2s;
 

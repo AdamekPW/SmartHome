@@ -84,7 +84,7 @@ const LedStripComponent = ({ client, device_id, ledStripPower }) => {
                 onOpenNavbar={setIsNavbarOpen}
             />
             {!isMobileViewActive || !isNavbarOpen ? (
-                <div>
+                <div className={styles.containerRight}>
                     {selectedLedId === 0 ? (
                         <h2>Włącz LEDy, aby wybrać tryb</h2>
                     ) : (
@@ -93,19 +93,19 @@ const LedStripComponent = ({ client, device_id, ledStripPower }) => {
                                 Wybrano tryb{" "}
                                 {ledOptions[selectedLedId - 1].name}
                             </h2>
+
+                            <LedParametersForm
+                                selectedLedId={selectedLedId}
+                                onParametersChange={setLedParameters}
+                            />
                             <button
                                 className={styles.confirmChanges}
                                 onClick={sendData}
                             >
-                                Zatwierdź ustawienia
+                                SEND
                             </button>
                         </div>
                     )}
-
-                    <LedParametersForm
-                        selectedLedId={selectedLedId}
-                        onParametersChange={setLedParameters}
-                    />
                     <button
                         onClick={handleToggle}
                         className={isOn ? styles.buttonOn : styles.buttonOff}
