@@ -60,22 +60,46 @@
     border-radius: 10px;
     font-size: 1.75em;
 }
+@media (min-width: 32rem) and (max-width: 42rem){
 
-@media (max-width: 32rem) {
     .FanContent {
         height: auto;
         width: 90%;
         flex-direction: column;
-        margin: 2rem auto;
         align-items: center;
+    }
+
+    .FanInfo {
+        display: flex;
+        width: 75%;
+        justify-content: space-around;
+        flex-direction: row;
+        align-items: center;
+        height: fit-content;
+    }
+
+
+}
+
+@media (max-width: 32rem) {
+    .FanContent {
+        height: calc(100vh - 4em);
+        width: 90%;
+        flex-direction: column;
+        margin: 2rem auto;
+        margin-top: 0px;
+        align-items: center;
+        justify-content: center;
     }
     .FanChart {
         width: 90%;
         padding: 1rem 0.5rem 5rem; //temporary (or not?)
         margin: 1rem;
+        margin-top: 0;
         border-radius: 10px;
         max-width: 100%;
         overflow: hidden;
+        margin-bottom: 5rem;
     }
     .FanInfo {
         display: flex;
@@ -115,13 +139,14 @@
         text-align: center;
         justify-content: space-around;
         flex-direction: column;
+        margin-bottom: 2rem;    
     }
     
     .TempText{
         background-color: $medium-grey;
-        padding: 0.75rem 1em;
+        padding: 0.75rem 1.5em;
         border-radius: 10px;
-        font-size: 1.1em;
+        font-size: 1.2em;
     }
     .FanChart{
         margin-top: 10px;

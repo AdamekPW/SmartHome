@@ -27,7 +27,7 @@
 .Plug {
     display: flex;
     background-color: $medium-grey;
-    width: 9.5  rem;
+    width: 9.5rem;
     padding: 1em 0;
     justify-content: space-around;
     flex-direction: column;
@@ -100,14 +100,52 @@
     transform: rotate(270deg);
 }
 
+@media (min-width: 32rem) and (max-width: 42rem){
 
-@media (max-width: 32rem) {
     .PlugContent {
         height: auto;
         width: 90%;
         flex-direction: column;
         margin: 2rem auto;
+    }
+
+    .Plug {
+        margin-top: 10px;
+        width: 100%;
+        flex-direction: row;
+        justify-content: space-around;
+    }
+
+    .CircleOn,
+    .CircleOff {
+        width: 5rem;
+        height: 5rem;
+        border: 5px solid $green;
+        transform: rotate(360deg);
+    }
+
+    .CircleOff {
+        border-color: $red;
+    }
+
+    .Dot {
+        font-size: 1.25rem;
+        color: black;
+    }
+    .Icon {
+        font-size: 2.5em; 
+        color: black;
+    }
+
+}
+
+@media (max-width: 32rem) {
+    .PlugContent {
+        height: calc(100vh - 4em);
+        width: 90%;
+        flex-direction: column;
         align-items: center;
+        margin: 0 auto 2rem auto;
     }
 
     .PlugChart {
@@ -123,6 +161,7 @@
         flex-direction: column;
         align-items: center;
         width: 100%;
+        margin-bottom: 1rem;
     }
 
     .Plug {
