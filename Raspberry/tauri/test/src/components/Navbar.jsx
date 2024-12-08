@@ -13,7 +13,7 @@ const Navbar = ({ selectedModule, onModuleSelect }) => {
                 }`}
                 onClick={() => onModuleSelect("home")}
             >
-                Logo
+                <img className={styles.logo} src="/logo.png" alt="logo"></img>
             </button>
             <p className={styles.modulesTitle}>Moduły</p>
             <button
