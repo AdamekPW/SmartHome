@@ -149,7 +149,7 @@ const PlugStripComponent = ({
                     </div>
                 </div>
 
-                <div className={styles.CurrentPowerSample}>300.99W</div>
+                <div className={styles.CurrentPowerSample}>{plugPower}W</div>
             </div>
         </div>
     );

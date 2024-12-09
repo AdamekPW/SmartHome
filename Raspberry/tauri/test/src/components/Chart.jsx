@@ -38,7 +38,7 @@ const Chart = ({ type, data = [], dbData = []}) => {
     }, [dbData]);
 
     const chartLabel =
-        type === "temperature" ? "Temperatura (°C)" : "Zużycie prądu (kWh)";
+        type === "temperature" ? "Temperatura (°C)" : "Zużycie prądu (W)";
 
     const average = useMemo(() => {
         return showingSessionData ? calculateAverage(data) : calculateAverage(dbData);
@@ -71,7 +71,7 @@ const Chart = ({ type, data = [], dbData = []}) => {
                 </label>
             </div>
             <div className={styles.average}>
-                Średnia: {average} {type === "temperature" ? "°C" : "kWh"}
+                Średnia: {average} {type === "temperature" ? "°C" : "W"}
             </div>
             {showingSessionData ? (
                 <ResponsiveLine
