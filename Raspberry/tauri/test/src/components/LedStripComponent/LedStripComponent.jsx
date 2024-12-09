@@ -89,11 +89,6 @@ const LedStripComponent = ({ client, device_id, ledStripPower }) => {
                         <h2>Włącz LEDy, aby wybrać tryb</h2>
                     ) : (
                         <div>
-                            <h2 className={styles.chosenLed}>
-                                Wybrano tryb{" "}
-                                {ledOptions[selectedLedId - 1].name}
-                            </h2>
-
                             <LedParametersForm
                                 selectedLedId={selectedLedId}
                                 onParametersChange={setLedParameters}
