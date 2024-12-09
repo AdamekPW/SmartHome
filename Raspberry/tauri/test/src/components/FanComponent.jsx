@@ -30,7 +30,7 @@ const FanComponent = ({ client, device_id, temperature, dbTemperature }) => {
         setIsOn(newState);
         const data = {
             sender_id: device_id,
-            data: newState ? "1" : "0",
+            data: newState ? "ON" : "OFF",
             target_id: "ESP1",
         };
         client.send(JSON.stringify(data));

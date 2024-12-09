@@ -11,10 +11,10 @@ import { PlugStripLivePowerContext, initialPlugStripLivePowerContext } from "./c
 import { LedStripLivePowerContext, initialLedStripLivePowerContext } from "./contexts/LedStripLivePowerContext";
 
 import { w3cwebsocket as W3CWebSocket } from "websocket";
-
-const device_id = "Front";
-
+import { v4 as uuidv4 } from 'uuid';
+var device_id = "";
 const App = () => {
+    
     const [selectedModule, setSelectedModule] = useState("home");
     const [temperature, setTemperature] = useState(0);
     const [plugPower, setPlugPower] = useState(0);
@@ -26,11 +26,14 @@ const App = () => {
     const [ledLivePowerData, setLedLivePowerData] = useState(initialLedStripLivePowerContext);
     const clientRef = useRef(null); // Referencja do WebSocket
     const reconnectTimeoutRef = useRef(null); // Referencja do timeouta dla ponownego łączenia
-    const url = 'ws://localhost:8765'; // Adres serwera WebSocket
+    const url = 'ws://192.168.0.104:8765'; // Adres serwera WebSocket
 
+    
     const connect = () => {
         console.log("Attempting to connect...");
         const client = new W3CWebSocket(url);
+        
+        device_id = "Front|" + uuidv4();
 
         client.onopen = () => {
             console.log(`${device_id} connected to the server.`);

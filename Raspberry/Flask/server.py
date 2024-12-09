@@ -40,12 +40,23 @@ Base.metadata.create_all(engine)
 
 connected_devices = {}
 white_list = ['ESP1', 'ESP2', 'ESP3', 'Front']
+async def send_to_front(command):
+    for key in connected_devices:
+        if key.startswith('Front|'):
+            await connected_devices[key].send(json.dumps(command))
+
 async def handle_connection(websocket, path):
     # Przypisz ID na podstawie ścieżki połączenia lub wiadomości inicjującej
     sender_id = await websocket.recv()  # Zakładamy, że klient wyśle swój ID zaraz po połączeniu
+    sender_id_original = sender_id
     connected_devices[sender_id] = websocket
+    result = sender_id.split('|')[0]
+    if (result == "Front"):
+        sender_id = result
+       
     print(f"Device {sender_id} connected.")
     
+
     if sender_id == "Front":
         current_month = datetime.datetime.now().strftime("%Y-%m")
 
@@ -121,30 +132,39 @@ async def handle_connection(websocket, path):
             data = json.loads(message)
             await process_device_data(data)
     except websockets.exceptions.ConnectionClosed as e:
-        print(f"Connection closed for {sender_id}: {e}")
+        print(f"Connection closed for {sender_id_original}: {e}")
     finally:
         # Potrzebne w celu naprawienia buga
         try: 
-            await connected_devices[sender_id].close()
-            del connected_devices[sender_id]
+            await connected_devices[sender_id_original].close()
+            del connected_devices[sender_id_original]
         except Exception as e:
             pass 
         # Usuń urządzenie po rozłączeniu
-        print(f"Device {sender_id} disconnected.")
+        print(f"Device {sender_id_original} disconnected.")
 
-async def send_command_to_device(sender_id, command):
-    if sender_id in connected_devices:
-        try:
-            if (command["target_id"] == "Front"):
-                await connected_devices[sender_id].send(json.dumps(command))
-            else:
-                await connected_devices[sender_id].send(command["data"])
-            #print(f"Sent command to {sender_id}: {command}")
-        except websockets.exceptions.ConnectionClosed as e:
-            print(f"Failed to send command to {sender_id}, connection closed: {e}")
-            del connected_devices[sender_id]
-    else:
-        print(f"Device {sender_id} not connected.")
+async def send_command_to_device(target_id, command):
+    found = False
+    if target_id in connected_devices:
+        found = True
+    elif target_id == 'Front':
+        for key in connected_devices:
+            if key.startswith('Front|'):
+                found = True
+    
+    if not found:
+        print(f"Device {target_id} not connected.")
+        return
+    try:
+        if (command["target_id"] == "Front"):
+            await send_to_front(command)
+            #await connected_devices[sender_id].send(json.dumps(command))
+        else:
+            await connected_devices[target_id].send(command["data"])
+        #print(f"Sent command to {sender_id}: {command}")
+    except websockets.exceptions.ConnectionClosed as e:
+        print(f"Failed to send command to {target_id}, connection closed: {e}")
+        del connected_devices[target_id]
 
 async def process_device_data(data):
     global ESP1_data, ESP2_data, ESP3_data
@@ -154,7 +174,10 @@ async def process_device_data(data):
         return
     sender_id = data.get("sender_id")
     target_id = data.get("target_id")
-
+   
+    result = sender_id.split('|')[0]
+    if (result == "Front"):
+        sender_id = result
     
     if sender_id == "Front" and target_id == "ESP1":
 
