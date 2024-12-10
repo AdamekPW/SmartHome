@@ -27,6 +27,7 @@ const App = () => {
     const clientRef = useRef(null); // Referencja do WebSocket
     const reconnectTimeoutRef = useRef(null); // Referencja do timeouta dla ponownego łączenia
     const url = 'ws://192.168.0.104:8765'; // Adres serwera WebSocket
+    // const url = 'ws://localhost:8765';
 
     
     const connect = () => {

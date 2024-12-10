@@ -25,7 +25,7 @@ const Chart = ({ type, data = [], dbData = []}) => {
 
     const chartData = useMemo(() => {
         return (showingSessionData ? data : dbData).map((value, index) => ({
-            x: index + 1,
+            x: index,
             y: value,
         }));
     }, [showingSessionData, data, dbData]);

@@ -10,7 +10,10 @@ import { ledOptions } from "./ledOptions";
 import { LedStripLivePowerContext } from "../../contexts/LedStripLivePowerContext";
 
 const LedStripComponent = ({ client, device_id, ledStripPower }) => {
-    const [selectedLedId, setSelectedLedId] = useState(1);
+    const [selectedLedId, setSelectedLedId] = useState(() => {
+        const savedLedId = localStorage.getItem("selectedLedId");
+        return savedLedId !== null ? JSON.parse(savedLedId) : 1;
+    });
     const [previousLedId, setPreviousLedId] = useState(1);
     const [isNavbarOpen, setIsNavbarOpen] = useState(true);
     const [isMobileViewActive, setIsMobileViewActive] = useState(true);
@@ -41,6 +44,10 @@ const LedStripComponent = ({ client, device_id, ledStripPower }) => {
         mediaQuery.addEventListener("change", handleResize);
         return () => mediaQuery.removeEventListener("change", handleResize);
     }, []);
+
+    useEffect(() => {
+        localStorage.setItem("selectedLedId", selectedLedId);
+    }, [selectedLedId]);
 
     const sendData = () => {
         if (ledParameters) {

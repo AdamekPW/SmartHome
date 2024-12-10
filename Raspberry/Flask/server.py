@@ -187,17 +187,18 @@ async def process_device_data(data):
         print(f"Sent button data to {target_id}: button state: {data['data']}")
         
     elif sender_id == "ESP1" and target_id == "Front":
-        print(f"Received temperature data from {sender_id}: {data['data']}°C")
+        if float(data['data']) > -100:
+            print(f"Received temperature data from {sender_id}: {data['data']}°C")
 
-        # try:
-        #     new_sample = Temperature(sample=data['data'])
-        #     session.add(new_sample)
-        #     session.commit()
-        # except Exception as e:
-        #     print(f"Failed to save temperature data to database: {e}")
+            # try:
+            #     new_sample = Temperature(sample=data['data'])
+            #     session.add(new_sample)
+            #     session.commit()
+            # except Exception as e:
+            #     print(f"Failed to save temperature data to database: {e}")
 
-        await send_command_to_device(target_id, data)
-        print(f"Sent temperature data to {target_id}: {data['data']}°C")
+            await send_command_to_device(target_id, data)
+            print(f"Sent temperature data to {target_id}: {data['data']}°C")
 
     elif sender_id == "ESP2" and target_id == "Front":
 
@@ -205,7 +206,8 @@ async def process_device_data(data):
         parts = data['data'].rsplit('|', 1)  
         buttons_info = parts[0]  
         power_info = parts[1]
-
+        if float(power_info) < 0:
+            power_info = '0'
 
         if (float(power_info) != -1.0):
             data['data'] = buttons_info+'|'+power_info
@@ -229,6 +231,8 @@ async def process_device_data(data):
     elif sender_id == "ESP3" and target_id == "Front":
 
         print(f"Received power data from {sender_id}: {data['data']}W")
+        if float(data['data']) < 0:
+            data['data'] = '0'
 
         # try:
         #     new_sample = PowerLED(sample=data['data'])
@@ -236,7 +240,6 @@ async def process_device_data(data):
         #     session.commit()
         # except Exception as e:
         #     print(f"Failed to save power data to database: {e}")
-
 
         await send_command_to_device(target_id, data)
         print(f"Sent power data to {target_id}: {data['data']}W")
