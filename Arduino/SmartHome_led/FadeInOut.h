@@ -16,6 +16,7 @@ class FadeInOut : public MyAnimation {
       void BlendAnimUpdate(const AnimationParam& param);
       void FadeInFadeOutRinseRepeat(float luminance);
   public:
+      static settings_FadeInOut Parse(String data);
       FadeInOut(MyStrip& myStrip);      
       void Run(void *settings);
 

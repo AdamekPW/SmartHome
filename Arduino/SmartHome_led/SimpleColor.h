@@ -7,6 +7,7 @@ class SimpleColor : public MyAnimation {
     private:
         
     public:
+        static settings_SimpleColor Parse(String data);
         SimpleColor(MyStrip& myStrip);
         void Run(void* settings);
 };

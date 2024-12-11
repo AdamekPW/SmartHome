@@ -1,7 +1,6 @@
 #include "Cyclon.h"
 
 Cyclon::Cyclon(MyStrip& myStrip) : MyAnimation(myStrip){
-  SetupAnimations();
 }
 
 const RgbColor CylonEyeColor(HtmlColor(0x7f0000));
@@ -32,6 +31,7 @@ void Cyclon::FadeAnimUpdate(const AnimationParam& param)
 
 void Cyclon::MoveAnimUpdate(const AnimationParam& param)
 {
+  
     float progress = moveEase(param.progress);
 
     uint16_t nextPixel;
@@ -40,6 +40,7 @@ void Cyclon::MoveAnimUpdate(const AnimationParam& param)
     else
       nextPixel = (1.0f - progress) * PixelCount;
 
+    
     if (lastPixel != nextPixel) {
         for (uint16_t i = lastPixel + moveDir; i != nextPixel; i += moveDir) {
             myStrip.strip.SetPixelColor(i, CylonEyeColor);
@@ -55,21 +56,48 @@ void Cyclon::MoveAnimUpdate(const AnimationParam& param)
     }
 }
 
-void Cyclon::SetupAnimations() {
+void Cyclon::SetupAnimations(uint32_t time1, uint32_t time2) {
     auto callback1 = [this](const AnimationParam& param) {
         this->FadeAnimUpdate(param);
     };
     auto callback2 = [this](const AnimationParam& param) {
         this->MoveAnimUpdate(param);
     };
-    animationsCyclon.StartAnimation(0, 50, callback1);
-    animationsCyclon.StartAnimation(1, 10000, callback2);
+    animationsCyclon.StartAnimation(0, time1, callback1);
+    animationsCyclon.StartAnimation(1, time2, callback2);
+}
+
+settings_Cyclon Cyclon::Parse(String data){
+  int startIndex = data.indexOf('|') + 1;
+  int endIndex = data.indexOf('|', startIndex);
+  float brightness = data.substring(startIndex, endIndex).toFloat();
+
+  startIndex = endIndex + 1;
+  endIndex = data.indexOf('|', startIndex);
+  uint8_t mode = data.substring(startIndex, endIndex).toInt();
+
+  startIndex = endIndex + 1;
+  endIndex = data.indexOf('|', startIndex);
+  uint32_t time1 = data.substring(startIndex, endIndex).toInt();
+
+  startIndex = endIndex + 1;
+  endIndex = data.indexOf('|', startIndex);
+  uint32_t time2 = data.substring(startIndex, endIndex).toInt();
+
+  
+  return settings_Cyclon(brightness, mode, time1, time2);
 }
 
 
 void Cyclon::Run(void* settings){
-    uint8_t AnimType = settings == NULL ? 0 : *(uint8_t*) settings;
-    switch (AnimType){
+    
+    settings_Cyclon sett;
+    if (settings == NULL)
+        sett = settings_Cyclon(0.2, 4, 50, 10000);
+    else 
+        sett = *(settings_Cyclon*) settings;
+
+    switch (sett.mode){
       case 0:
           moveEase = NeoEase::Linear;
           break;
@@ -95,6 +123,13 @@ void Cyclon::Run(void* settings){
           moveEase = NeoEase::CircularInOut;
           break;
     }
+
+    if (!setUp){
+       SetupAnimations(sett.time1, sett.time2);
+       brightness = sett.brightness;
+       setUp = true;
+    }
+
     animationsCyclon.UpdateAnimations();
     myStrip.strip.Show();
 }

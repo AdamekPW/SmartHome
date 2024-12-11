@@ -2,8 +2,6 @@
 #define MYANIMATION
 
 #include "Arduino.h"
-#include <NeoPixelBus.h>
-#include <NeoPixelAnimator.h>
 #include <String.h>
 #include "Consts.h"
 

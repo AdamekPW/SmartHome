@@ -44,13 +44,26 @@ void RandomChange::PickRandom(float luminance)
     }
 }
 
+settings_RandomChange RandomChange::Parse(String data){
+     int startIndex = data.indexOf('|') + 1;
+    int endIndex = data.indexOf('|', startIndex);
+    float brightness = data.substring(startIndex, endIndex).toFloat();
+
+    return settings_RandomChange(brightness);
+}
+
 void RandomChange::Run(void* settings){
+  settings_RandomChange sett;
+  if (settings == NULL)
+    sett = settings_RandomChange(0.2);
+  else 
+    sett = *(settings_RandomChange*) settings;
   if (animationsRC.IsAnimating()) {
       animationsRC.UpdateAnimations();
       myStrip.strip.Show();
   }
   else {
-      PickRandom(0.2f); 
+      PickRandom(sett.brightness); 
   }
 
 }

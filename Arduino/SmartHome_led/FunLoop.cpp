@@ -44,7 +44,7 @@ void FunLoop::LoopAnimUpdate(const AnimationParam& param)
         animationsFunLoop.RestartAnimation(param.index);
         frontPixel = (frontPixel + 1) % PixelCount; 
         if (frontPixel == 0) {
-            frontColor = HslColor(random(360) / 360.0f, 1.0f, 0.25f);
+            frontColor = HslColor(random(360) / 360.0f, 1.0f, brightness);
         }
 
         uint16_t indexAnim;
@@ -63,9 +63,25 @@ void FunLoop::LoopAnimUpdate(const AnimationParam& param)
     }
 }
 
+settings_FunLoop FunLoop::Parse(String data){
+    int startIndex = data.indexOf('|') + 1;
+    int endIndex = data.indexOf('|', startIndex);
+    float brightness = data.substring(startIndex, endIndex).toFloat();
 
+    // startIndex = endIndex + 1;
+    // endIndex = data.indexOf('|', startIndex);
+    // uint32_t time = data.substring(startIndex, endIndex).toInt();
+
+    return settings_FunLoop(brightness);
+}
 
 void FunLoop::Run(void* settings){
+    settings_FunLoop sett;
+    if (settings == NULL)
+      sett = settings_FunLoop(0.2);
+    else 
+      sett = *(settings_FunLoop*) settings;
+    brightness = sett.brightness;
     animationsFunLoop.UpdateAnimations();
     myStrip.strip.Show();
 }

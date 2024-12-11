@@ -3,10 +3,9 @@
 Rainbow::Rainbow(MyStrip& myStrip) : MyAnimation(myStrip){}
 
 
-RgbColor Rainbow::Wheel(uint8_t WheelPos, uint8_t brightness) 
+RgbColor Rainbow::Wheel(uint8_t WheelPos, float scale) 
 {
     WheelPos = 255 - WheelPos;
-    float scale = brightness / 255.0;
     if (WheelPos < 85) {
         return RgbColor((255 - WheelPos * 3) * scale, 0, (WheelPos * 3) * scale);
     } 
@@ -20,24 +19,41 @@ RgbColor Rainbow::Wheel(uint8_t WheelPos, uint8_t brightness)
     }
 }
 
+settings_Rainbow Rainbow::Parse(String data){
+  int startIndex = data.indexOf('|') + 1;
+  int endIndex = data.indexOf('|', startIndex);
+  float brightness = data.substring(startIndex, endIndex).toFloat();
+
+  startIndex = endIndex + 1;
+  endIndex = data.indexOf('|', startIndex);
+  int del = data.substring(startIndex, endIndex).toInt();
+
+  return settings_Rainbow(brightness, del);
+}
+
 void Rainbow::Run(void *settings){
-  uint8_t brightness = settings == NULL ? 20 : *(uint8_t*)settings;
+  settings_Rainbow sett;
+  if (settings == NULL) sett = settings_Rainbow(0.2, 50);
+  else sett = *(settings_Rainbow*) settings;
+
+
   static RgbColor color;
-  static uint16_t j = 0;
   static uint8_t pos;
+  static uint16_t j = 0;
+  static uint32_t lastRainbowUpdate = 0;
+  if (millis() - lastRainbowUpdate > sett.del){
+    for(uint16_t i=0; i<myStrip.PixelCount; i++)
+    {
+        pos = ((i*256/myStrip.PixelCount)+j) & 0xFF;
+        color = Wheel( pos, sett.brightness);
+        myStrip.strip.SetPixelColor(i, color);
+    }
 
-  for(uint16_t i=0; i<myStrip.PixelCount; i++)
-  {
-      pos = ((i*256/myStrip.PixelCount)+j) & 0xFF;
-      color = Wheel( pos, 20);
-      myStrip.strip.SetPixelColor(i, color);
+    j++;
+    if (j >= 256 * 1) j = 0;
+    lastRainbowUpdate = millis();
+    myStrip.strip.Show();
   }
-  myStrip.strip.Show();
 
-  j++;
-  if (j >= 256 * 1) j = 0;
-
-
-  delay(50);
 
 }

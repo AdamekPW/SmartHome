@@ -8,6 +8,7 @@ class RandomChange : public MyAnimation {
         void BlendAnimUpdate(const AnimationParam& param);
         void PickRandom(float luminance);
     public:
+        static settings_RandomChange Parse(String data);
         RandomChange(MyStrip &myStrip);
         void Run(void* settings);
 

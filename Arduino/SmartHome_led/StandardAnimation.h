@@ -6,8 +6,9 @@
 class StandardAnimation : public MyAnimation {
   private:
     void AnimUpdate(const AnimationParam& param);
-    void SetupAnimationSet();
+    void SetupAnimationSet(float brightness);
   public:
+    static settings_StandardAnimation Parse(String data);
     StandardAnimation(MyStrip& myStrip);  
     void Run(void* settings);
 

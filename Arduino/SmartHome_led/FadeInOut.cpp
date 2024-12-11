@@ -47,14 +47,22 @@ void FadeInOut::BlendAnimUpdate(const AnimationParam& param) {
     }
 }
 
+settings_FadeInOut FadeInOut::Parse(String data){
+  int startIndex = data.indexOf('|') + 1;
+  int endIndex = data.indexOf('|', startIndex);
+  float brightness = data.substring(startIndex, endIndex).toFloat();
+
+  return settings_FadeInOut(brightness);
+}
+
 
 void FadeInOut::Run(void* settings) {
-  float luminance = settings == NULL ? 0.2 : *(float*) settings;
+  settings_FadeInOut sett = (settings == NULL) ? settings_FadeInOut(0.2) : *(settings_FadeInOut*) settings;
   if (animationsFadeInOut.IsAnimating()) {
       animationsFadeInOut.UpdateAnimations();
       myStrip.strip.Show();
   }
   else {
-      FadeInFadeOutRinseRepeat(luminance); 
+      FadeInFadeOutRinseRepeat(sett.brightness); 
   }
 }
